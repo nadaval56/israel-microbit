@@ -544,15 +544,16 @@ namespace israel {
                     "C5:2 D5:1 C5:1 B4:2 A4:1 G4:1 Fs4:2 G4:1 Fs4:1 E4:3", 84, 1);
                 break;
             case IsraeliSong.Vesamachta: {
-                // Ve-sa-mach-ta be-cha-ge-cha (Sara Levi-Tanai)
-                const a = "F4:0.25 G4:0.25 A4:1 A4:0.5 C5:0.5 A4:0.5 A4:0.5 F4:0.5 " +
-                    "R:0.5 D4:0.5 G4:0.5 F4:0.5 R:0.5 F4:0.25 G4:0.25 A4:0.5 G4:0.5 R:1 ";
-                // Ve-ha-yi-ta ach sa-me-ach
-                const b = "C4:0.75 D4:0.25 D4:0.5 F4:0.5 C4:0.5 D4:0.5 D4:0.5 D4:0.5 " +
-                    "C4:0.75 D4:0.25 D4:0.5 A4:0.5 C4:0.5 D4:0.5 D4:0.5 D4:0.5 " +
-                    "C4:0.75 D4:0.25 D4:0.5 F4:0.5 G4:0.5 G4:0.5 A4:0.25 G4:0.25 F4:0.5 ";
-                playSongText(a + a + b + "A4:1.5 F4:0.5 A4:0.5 G4:0.5 R:1 " +
-                    b + "A4:1 C5:1 A4:0.25 G4:0.25 A4:1.5", 110, 1);
+                // Chasidic melody: a niggun, then "ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach"
+                const niggun = "D4:0.25 E4:0.25 F4:0.25 G4:0.25 A4:0.5 A4:0.5 A4:0.5 A4:0.5 A4:0.5 A4:0.5 " +
+                    "As4:0.5 As4:1 A4:0.5 A4:0.5 G4:0.25 A4:0.25 G4:0.5 F4:0.5 " +
+                    "As4:0.5 A4:1 G4:0.5 G4:0.5 D4:0.25 D4:0.25 D4:0.5 D4:0.5 " +
+                    "F4:0.5 A4:0.5 G4:0.5 As4:0.5 A4:1 G4:1 ";
+                const words = "D5:1 A4:1 As4:0.5 A4:1.5 D5:1 A4:1 As4:0.5 A4:1.5 D5:1 C5:1 As4:1 A4:1 " +
+                    "G4:0.5 G4:0.5 As4:0.5 A4:0.5 G4:2 " +
+                    "C5:1 G4:1 A4:0.5 G4:1.5 C5:1 G4:1 A4:0.5 G4:1.5 C5:1 As4:1 A4:1 G4:1 " +
+                    "F4:0.5 F4:0.5 A4:0.5 G4:0.5 F4:2 ";
+                playSongText(niggun + "F4:1 C5:0.5 As4:0.5 A4:2 " + niggun + "F4:1 E4:1 D4:2 " + words + words, 110, 1);
                 break;
             }
             case IsraeliSong.UshavtemMayim: {
@@ -574,11 +575,10 @@ namespace israel {
             }
             case IsraeliSong.BarYochai: {
                 // Bar Yo-chai, nim-shach-ta ash-re-cha, she-men sa-son me-cha-ve-re-cha
-                const refrain = "F4:1.5 G4:0.5 F4:1 E4:1 G4:1 G4:0.5 E4:0.5 F4:0.5 E4:0.5 D4:1 " +
-                    "E4:1.5 G4:0.5 F4:0.5 E4:0.5 D4:1 D4:1 As3:0.5 C4:0.5 D4:1 D4:1 ";
-                const stanza = "F4:1.5 G4:0.5 G4:2 A4:0.5 A4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " +
-                    "E4:1.5 G4:0.5 G4:1 F4:1 F4:0.5 E4:0.5 D4:0.5 E4:0.5 F4:1 F4:1 ";
-                playSongText(refrain + refrain + stanza + refrain, 100, 1);
+                const refrain = "F4:1.5 G4:0.5 F4:1.5 D4:0.5 G4:1 G4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " +
+                    "E4:1.5 G4:0.5 G4:0.5 F4:0.5 F4:1 F4:0.5 E4:0.5 D4:0.5 E4:0.5 F4:0.5 G4:0.5 F4:1 " +
+                    "F4:1.5 G4:0.5 G4:1 G4:1 A4:0.5 As4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 ";
+                playSongText(refrain + refrain, 90, 1);
                 break;
             }
             case IsraeliSong.Salenu: {
