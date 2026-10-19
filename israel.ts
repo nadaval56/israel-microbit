@@ -70,8 +70,8 @@ enum IsraeliSong {
     BarYochai,
     //% block="Salenu Al Ktefenu (Shavuot)"
     Salenu,
-    //% block="Hashkediya Porachat (Tu BiShvat)"
-    Hashkediya
+    //% block="Shirat HaAsavim"
+    ShiratHaasavim
 }
 
 /**
@@ -595,15 +595,20 @@ namespace israel {
                     hach + "G4:2 " + hach + "C4:2", 100, 1);
                 break;
             }
-            case IsraeliSong.Hashkediya: {
-                // Ha-shke-di-ya po-ra-chat ve-she-mesh paz zo-ra-chat,
-                // tzi-po-rim me-rosh kol gag me-vas-rot et bo he-chag (Menashe Rabina)
-                const verse = "C4:0.5 C4:0.5 C4:0.5 C4:0.5 C4:0.5 G4:1 E4:0.5 E4:0.5 G4:0.5 G4:0.5 A4:0.5 A4:0.5 G4:1 E4:1 " +
-                    "C4:0.5 D4:0.5 E4:0.5 C4:0.5 E4:0.5 A4:0.5 G4:1 G4:0.5 G4:0.5 A4:0.5 G4:0.5 E4:0.5 G4:0.5 C4:1 ";
-                // Tu bi-shvat hi-gi-a, chag ha-i-la-not
-                const chorus = "C5:0.5 C5:0.5 A4:0.5 A4:0.5 G4:1 E4:1 ";
-                playSongText(verse + chorus + "C4:0.5 C4:0.5 E4:0.5 C4:0.5 G4:2 " +
-                    chorus + "G4:0.5 G4:0.5 E4:0.5 G4:0.5 C4:2", 100, 1);
+            case IsraeliSong.ShiratHaasavim: {
+                // Da le-cha she-kol ro-e ve-ro-e yesh lo ni-gun me-yu-chad mi-she-lo (Naomi Shemer)
+                const open = "E4:0.75 D4:0.25 D4:1.5 B3:0.5 D4:0.5 E4:0.5 Fs4:0.5 E4:0.25 E4:0.25 E4:3 ";
+                const turn = "G4:0.5 Fs4:0.25 G4:0.25 Fs4:0.5 E4:0.25 Fs4:0.25 ";
+                // ...ni-gun shel ha-a-sa-vim
+                const end = "B4:2.5 B4:0.5 A4:0.5 G4:0.5 Fs4:0.75 E4:0.25 D4:0.5 Cs4:0.5 B3:1.5 B3:0.25 B3:0.25 ";
+                const close = "E4:0.75 B3:0.25 E4:2.5 B3:0.25 B3:0.25 B3:4 ";
+                const verse1 = open + turn + "E4:1.5 B3:0.25 B3:0.25 B3:4 " +
+                    "E4:0.75 D4:0.25 D4:2 D4:0.5 E4:0.5 Fs4:0.5 E4:0.25 E4:0.25 Fs4:0.5 E4:2.5 " +
+                    turn + "A4:0.5 D4:1 D4:0.25 D4:0.25 " + end + close;
+                // Ka-ma ya-fe ve-na-e...
+                const verse2 = "E4:0.5 D4:0.25 D4:0.25 D4:1.5 B3:0.5 D4:0.5 E4:0.5 Fs4:0.5 E4:0.25 E4:0.25 E4:3 " +
+                    turn + "E4:1.5 B3:0.25 B3:0.25 B3:4 " + open + turn + "E4:1 D4:0.5 D4:0.5 " + end + close;
+                playSongText(verse1 + verse2, 80, 1);
                 break;
             }
             default: {
