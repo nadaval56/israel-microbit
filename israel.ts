@@ -71,7 +71,9 @@ enum IsraeliSong {
     //% block="Salenu Al Ktefenu (Shavuot)"
     Salenu,
     //% block="Shirat HaAsavim"
-    ShiratHaasavim
+    ShiratHaasavim,
+    //% block="Eretz Chita (Shavuot)"
+    EretzChita
 }
 
 /**
@@ -611,6 +613,16 @@ namespace israel {
                 playSongText(verse1 + verse2, 80, 1);
                 break;
             }
+            case IsraeliSong.EretzChita:
+                // E-retz chi-ta u-se-o-ra, ve-ge-fen u-te-e-na ve-ri-mon,
+                // e-retz zeit she-men u-dvash (Ephraim Ben-Haim)
+                playSongText("C4:0.5 D4:0.5 D4:0.5 E4:0.5 F4:1.5 E4:0.5 D4:0.5 E4:0.5 F4:0.25 G4:0.25 F4:0.25 E4:0.25 F4:2 " +
+                    "D4:0.5 E4:0.5 F4:0.5 G4:0.5 G4:1.5 F4:0.5 E4:0.5 F4:0.5 G4:0.25 A4:0.25 G4:0.25 F4:0.25 G4:1.5 G4:0.5 " +
+                    "C5:1 A4:1 A4:0.5 G4:0.25 F4:0.25 F4:0.75 A4:0.25 G4:1.5 A4:0.5 As4:0.5 A4:1 G4:0.5 G4:0.25 A4:0.25 F4:1.5 " +
+                    "E4:0.5 E4:0.25 D4:0.25 E4:0.5 F4:0.5 E4:0.5 E4:0.25 D4:0.25 G4:2 G4:0.5 A4:0.5 " +
+                    "As4:0.5 A4:0.5 G4:0.5 A4:0.5 G4:0.5 F4:0.5 G4:1 " +
+                    "C5:1 A4:1 A4:0.5 A4:0.25 G4:0.25 A4:2 R:1 G4:0.25 F4:0.25 E4:0.25 F4:0.25 G4:3", 90, 1);
+                break;
             default: {
                 // Am Yis-ra-el chai, Am Yis-ra-el chai, Am Yis-ra-el, Am Yis-ra-el, Am Yis-ra-el chai
                 const a = "A4:0.5 A4:0.5 G4:0.5 E4:0.5 A4:2 A4:0.5 A4:0.5 G4:0.5 E4:0.5 A4:2 " +
