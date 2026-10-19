@@ -1,0 +1,25 @@
+{
+    "name": "israel",
+    "version": "1.0.0",
+    "description": "Israeli blocks for micro:bit: the flag, Star of David, Hebrew text, Hatikvah and holiday animations",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "israel.ts",
+        "_locales/he/israel-strings.json",
+        "_locales/he/israel-jsdoc-strings.json"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "9.1.1"
+    },
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "blocksprj"
+}
