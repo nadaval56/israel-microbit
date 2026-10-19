@@ -47,39 +47,11 @@ enum HebrewGreeting {
 }
 
 /**
- * Israeli songs and holiday songs
- */
-enum IsraeliSong {
-    //% block="Am Yisrael Chai"
-    AmYisraelChai,
-    //% block="Sevivon (Hanukkah)"
-    Sevivon,
-    //% block="Maoz Tzur (Hanukkah)"
-    MaozTzur,
-    //% block="Chag Purim (Purim)"
-    ChagPurim,
-    //% block="Dayenu (Passover)"
-    Dayenu,
-    //% block="Eli Eli (Memorial Day)"
-    EliEli,
-    //% block="Vesamachta Bechagecha (Sukkot)"
-    Vesamachta,
-    //% block="Ushavtem Mayim (Sukkot)"
-    UshavtemMayim,
-    //% block="Bar Yochai (Lag BaOmer)"
-    BarYochai,
-    //% block="Salenu Al Ktefenu (Shavuot)"
-    Salenu,
-    //% block="Shirat HaAsavim"
-    ShiratHaasavim
-}
-
-/**
  * Israeli and Zionist blocks: the Star of David,
  * Hebrew text on the LED screen, Hatikvah and holiday animations.
  */
 //% weight=100 color="#0038b8" icon="" block="Israel"
-//% groups='["Symbols", "Animations", "Hebrew", "Music", "Fun"]'
+//% groups='["Symbols", "Animations", "Hebrew", "Music", "Morse", "Fun"]'
 namespace israel {
 
     // ---------------------------------------------------------------------
@@ -340,7 +312,8 @@ namespace israel {
      * Turn Hebrew text into LED columns, ordered from left to right
      * as the text is seen (numbers stay left-to-right).
      */
-    function hebrewColumns(text: string): number[] {
+    //% blockHidden=true
+    export function hebrewColumns(text: string): number[] {
         const glyphs: string[] = [];
         const digit: boolean[] = [];
         for (let i = 0; i < text.length; i++) {
@@ -424,214 +397,6 @@ namespace israel {
     //% group="Hebrew" weight=90
     export function showGreeting(greeting: HebrewGreeting): void {
         showHebrew(greetingText(greeting));
-    }
-
-    // ---------------------------------------------------------------------
-    // Music
-    // ---------------------------------------------------------------------
-
-    // Songs are written as "note:beats" separated by spaces, e.g. "D5:0.5 Fs5:1 R:1".
-    // A note is a letter, an optional "s" (sharp) or "b" (flat) and an octave;
-    // "R" is a rest. Beats are quarter notes.
-
-    function noteFrequency(note: string): number {
-        const steps = [9, 11, 0, 2, 4, 5, 7]; // A B C D E F G
-        let semitone = steps[note.charCodeAt(0) - 65];
-        const accidental = note.charAt(1);
-        if (accidental == "s") semitone++;
-        else if (accidental == "b") semitone--;
-        const octave = note.charCodeAt(note.length - 1) - 48;
-        const midi = 12 * (octave + 1) + semitone;
-        return Math.round(440 * Math.pow(2, (midi - 69) / 12));
-    }
-
-    // Plays a song at its own tempo. The MakeCode tempo block scales it:
-    // the default tempo of 120 plays the song at its natural speed.
-    // Low songs can be raised by whole octaves, which the speaker plays louder.
-    // Each note is cut a little short so that repeated notes are heard separately.
-    function playSongText(song: string, bpm: number, octaveUp: number = 0): void {
-        const beat = 60000 / bpm * 120 / music.tempo();
-        const tokens = song.split(" ");
-        for (let i = 0; i < tokens.length; i++) {
-            const token = tokens[i];
-            const colon = token.indexOf(":");
-            if (colon < 0) continue;
-            const note = token.substr(0, colon);
-            const ms = Math.round(parseFloat(token.substr(colon + 1)) * beat);
-            if (note == "R") {
-                music.rest(ms);
-            } else {
-                const gap = Math.min(60, Math.idiv(ms, 5));
-                music.playTone(noteFrequency(note) * Math.pow(2, octaveUp), ms - gap);
-                music.rest(gap);
-            }
-        }
-    }
-
-    /**
-     * Play Hatikvah, the national anthem of Israel
-     */
-    //% blockId=israel_hatikvah block="play Hatikvah"
-    //% group="Music" weight=100
-    export function playHatikvah(): void {
-        // Kol od ba-le-vav pe-ni-ma, ne-fesh ye-hu-di ho-mi-ya
-        const verse = "D5:0.5 E5:0.5 F5:0.5 G5:0.5 A5:1 A5:1 As5:0.5 A5:0.5 As5:0.5 D6:0.5 A5:2 " +
-            "G5:1 G5:0.5 G5:0.5 F5:1 F5:1 E5:0.5 D5:0.5 E5:0.5 F5:0.5 D5:1.5 A4:0.5 " +
-            "D5:0.5 E5:0.5 F5:0.5 G5:0.5 A5:1 A5:1 As5:0.5 A5:0.5 As5:0.5 D6:0.5 A5:2 " +
-            "G5:1 G5:0.5 G5:0.5 F5:1 F5:1 E5:0.5 D5:0.5 E5:0.5 F5:0.5 D5:2 ";
-        // Od lo av-da tik-va-te-nu
-        const chorus = "D5:1 D6:1 D6:1 D6:1 C6:0.5 D6:0.5 C6:0.5 As5:0.5 A5:2 " +
-            "D5:1 D6:1 D6:1 D6:1 C6:0.5 D6:0.5 C6:0.5 As5:0.5 A5:2 ";
-        // Lih-yot am chof-shi be-ar-tze-nu, e-retz tzi-yon vi-ru-sha-la-yim
-        const ending = "G5:1 G5:0.5 G5:0.5 F5:1 F5:1 G5:0.5 A5:0.5 As5:0.5 C6:0.5 A5:1 G5:0.5 F5:0.5 " +
-            "G5:1 G5:1 F5:1 F5:1 E5:0.5 D5:0.5 E5:0.5 F5:0.5 D5:2 ";
-        playSongText(verse + chorus + ending + ending, 72);
-    }
-
-    /**
-     * Play an Israeli song or a holiday song
-     * @param song the song to play
-     */
-    //% blockId=israel_play_song block="play song %song"
-    //% group="Music" weight=90
-    export function playSong(song: IsraeliSong): void {
-        switch (song) {
-            case IsraeliSong.Sevivon:
-                // Se-vi-von, sov sov sov, Cha-nu-ka hu chag tov
-                playSongText("D5:0.5 D5:0.5 E5:1 F5:0.5 F5:0.5 E5:1 A5:0.5 A5:0.5 G5:0.25 F5:0.25 E5:0.25 D5:0.25 F5:0.5 F5:0.5 E5:1 " +
-                    "D5:0.5 D5:0.5 E5:1 F5:0.5 F5:0.5 G5:1 A5:0.5 A5:0.5 A5:0.5 A4:0.5 D5:0.5 D5:0.5 D5:1 " +
-                    "G5:0.5 G5:0.5 G5:0.5 As5:0.5 A5:0.5 A5:0.5 F5:0.25 E5:0.25 D5:0.5 Cs5:0.5 Cs5:0.5 A4:0.5 Cs5:0.5 D5:0.75 E5:0.25 F5:0.25 E5:0.25 D5:0.5 " +
-                    "G5:0.5 G5:0.5 G5:0.5 As5:0.5 A5:1 F5:0.25 E5:0.25 D5:0.5 Cs5:0.5 Cs5:0.5 A4:0.5 Cs5:0.5 D5:0.5 D5:0.5 D5:1", 84);
-                break;
-            case IsraeliSong.MaozTzur: {
-                // Ma-oz tzur ye-shu-a-ti, le-cha na-eh le-sha-be-ach
-                const a = "F4:1 C4:1 F4:1 As4:1 A4:1 G4:1 F4:1 R:1 C5:1 D5:1 G4:1 A4:0.5 As4:0.5 ";
-                // Le-et ta-chin mat-be-ach, mi-tzar ha-me-na-be-ach
-                const b = "C5:1.5 C5:0.5 D5:1 E5:1 F5:2 C5:2 F5:1 E5:1 D5:1 C5:1 C5:0.5 As4:0.5 A4:0.5 As4:0.5 G4:1 R:1 ";
-                // Az eg-mor be-shir miz-mor cha-nu-kat ha-miz-be-ach
-                const c = "A4:1.5 As4:0.5 C5:1 R:0.5 C5:0.5 G4:1.5 A4:0.5 As4:1 R:1 A4:1 F4:1 D5:1 C5:0.5 As4:0.5 ";
-                playSongText(a + "A4:1 G4:1 F4:1 R:1 " + a + "A4:1 G4:1 F4:1 R:0.5 C5:0.5 " + b +
-                    c + "A4:1 As4:1 C5:1 R:1 " + c + "A4:1 G4:1 F4:2", 92, 1);
-                break;
-            }
-            case IsraeliSong.ChagPurim: {
-                // Chag Pu-rim, chag Pu-rim, chag ga-dol hu la-ye-hu-dim
-                // Ma-se-chot, ra-a-sha-nim, ze-mi-rot ve-ri-ku-dim
-                const verse = "F5:0.5 G5:0.5 F5:1 F5:0.5 G5:0.5 F5:1 F5:0.5 G5:0.5 F5:0.5 G5:0.5 F5:0.5 E5:0.5 D5:1 " +
-                    "D5:0.5 G5:0.5 G5:1 D5:0.5 G5:0.5 G5:1 D5:0.5 G5:0.5 F5:0.5 E5:0.5 F5:2 ";
-                // Ha-va na-ri-sha: rash rash rash, ba-ra-a-sha-nim
-                const chorus = "A5:0.5 A5:0.25 A5:0.25 G5:0.5 F5:0.5 G5:0.5 G5:0.5 G5:1 " +
-                    "G5:0.5 G5:0.25 G5:0.25 F5:0.5 D5:0.5 F5:0.5 F5:0.5 F5:1 " +
-                    "A5:0.5 A5:0.25 A5:0.25 G5:0.5 F5:0.5 G5:0.5 G5:0.5 G5:1 " +
-                    "D5:0.5 G5:0.5 F5:0.5 E5:0.5 D5:2";
-                playSongText(verse + chorus, 100);
-                break;
-            }
-            case IsraeliSong.Dayenu: {
-                // I-lu ho-tzi-a-nu mi-mitz-ra-yim...
-                const verse = "B4:0.5 D5:0.5 D5:0.5 D5:0.5 D5:0.5 E5:0.5 D5:0.5 C5:0.5 B4:0.5 D5:0.5 D5:0.5 D5:0.5 D5:0.5 E5:0.5 D5:0.5 C5:0.5 " +
-                    "B4:0.5 D5:0.5 A4:0.5 C5:0.5 B4:0.5 D5:0.5 A4:0.5 C5:0.5 B4:1 A4:1 G4:1 R:1 ";
-                // Da-da-ye-nu, da-da-ye-nu, da-da-ye-nu, da-ye-nu da-ye-nu
-                const chorus = "B4:1 B4:1 D5:0.5 C5:1 A4:0.5 C5:1 C5:1 E5:0.5 D5:1 B4:0.5 D5:1 D5:1 G5:0.5 Fs5:1 Fs5:0.5 Fs5:0.5 D5:0.5 E5:0.5 Fs5:0.5 ";
-                playSongText(verse + chorus + "G5:0.5 D5:0.5 B4:0.5 G4:0.5 " + chorus + "G5:2", 100);
-                break;
-            }
-            case IsraeliSong.EliEli:
-                // E-li, E-li, she-lo yi-ga-mer le-o-lam: ha-chol ve-ha-yam,
-                // rish-rush shel ha-ma-yim, be-rak ha-sha-ma-yim, te-fi-lat ha-a-dam
-                playSongText("B3:1 B4:3 Fs4:1 G4:3 E4:1 G4:1 Fs4:0.5 E4:0.5 Ds4:1 E4:0.5 Fs4:0.5 B3:3 B3:1 " +
-                    "E4:2 E4:1 E4:1 Fs4:3 E4:0.5 Fs4:0.5 G4:2 G4:1 Fs4:0.5 G4:0.5 A4:2 A4:1 G4:0.5 A4:0.5 " +
-                    "B4:2 B4:1 A4:0.5 B4:0.5 C5:2 C5:1 C5:1 B4:2 B4:1 A4:1 B4:3 B4:1 " +
-                    "Fs4:2 G4:1 A4:1 G4:3 Fs4:0.5 E4:0.5 Ds4:2 E4:1 Fs4:1 E4:2 E4:1 E4:1 " +
-                    "C5:2 D5:1 C5:1 B4:2 A4:1 G4:1 Fs4:2 G4:1 Fs4:1 E4:3", 84, 1);
-                break;
-            case IsraeliSong.Vesamachta: {
-                // Ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach (Chasidic melody)
-                const words = "D5:1 A4:1 As4:0.5 A4:1.5 D5:1 A4:1 As4:0.5 A4:1.5 D5:1 C5:1 As4:1 A4:1 " +
-                    "G4:0.5 G4:0.5 As4:0.5 A4:0.5 G4:2 " +
-                    "C5:1 G4:1 A4:0.5 G4:1.5 C5:1 G4:1 A4:0.5 G4:1.5 C5:1 As4:1 A4:1 G4:1 " +
-                    "F4:0.5 F4:0.5 A4:0.5 G4:0.5 F4:2 ";
-                playSongText(words + words, 110, 1);
-                break;
-            }
-            case IsraeliSong.UshavtemMayim: {
-                // U-sh'-av-tem ma-yim be-sa-son mi-ma-ay-nei ha-ye-shu-a
-                const verse = "D5:0.25 D5:0.25 D5:0.5 E5:0.5 F5:0.25 E5:0.25 D5:0.5 F5:0.5 G5:0.5 A5:0.75 G5:0.25 " +
-                    "F5:0.5 A5:0.5 C6:0.5 As5:0.5 A5:0.5 G5:0.5 A5:0.5 " +
-                    "D5:0.25 D5:0.25 D5:0.5 E5:0.5 F5:0.25 E5:0.25 D5:0.5 F5:0.5 G5:0.5 A5:1 " +
-                    "D6:0.5 D6:0.5 C6:0.5 C6:0.5 A5:0.5 C6:0.5 D6:1 ";
-                // Ma-yim ma-yim ma-yim ma-yim, hoi ma-yim be-sa-son
-                const mayim = "D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 R:0.5 D6:0.5 C6:0.5 C6:0.5 A5:0.5 ";
-                // Hei hei hei hei, ma-yim ma-yim ...
-                const hei = "C6:1 C6:1 C6:1 C6:1 " +
-                    "C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 " +
-                    "F5:0.5 G5:0.5 A5:0.25 As5:0.25 A5:0.5 G5:0.5 F5:0.5 C6:1 " +
-                    "C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 " +
-                    "A5:0.5 A5:0.5 F5:0.25 E5:0.25 D5:0.5 F5:0.5 E5:0.5 D5:1";
-                playSongText(verse + mayim + "C6:0.5 D6:1 " + mayim + "G5:0.5 A5:1 " + hei, 100);
-                break;
-            }
-            case IsraeliSong.BarYochai: {
-                // Bar Yo-chai, nim-shach-ta ash-re-cha, she-men sa-son me-cha-ve-re-cha
-                const end = "R:0.5 E4:1 G4:0.5 G4:0.5 F4:0.5 F4:1 F4:0.5 E4:0.5 D4:0.5 E4:0.5 F4:1 F4:1 " +
-                    "F4:1.5 G4:0.5 G4:1.5 G4:0.5 A4:0.5 As4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " +
-                    "R:0.5 A4:1 A4:0.5 A4:1 D4:1 D4:0.5 C4:0.5 B3:0.5 C4:0.5 D4:1 D4:1 ";
-                playSongText("F4:1.5 G4:0.5 F4:1.5 D4:0.5 G4:1 G4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " + end +
-                    "G4:1.5 G4:0.5 F4:0.5 E4:0.5 D4:1 G4:0.5 G4:0.5 G4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " + end, 108, 1);
-                break;
-            }
-            case IsraeliSong.Salenu: {
-                // Sa-le-nu al ke-te-fe-nu, ra-shei-nu a-tu-rim
-                const a = "C4:0.5 G4:1 E4:0.5 F4:0.5 E4:0.5 D4:0.5 C4:0.5 D4:0.5 F4:1 E4:0.5 D4:0.5 C4:0.5 ";
-                // Hach hach ba-tof, ve-hach ba-cha-lil
-                const hach = "G4:0.5 R:0.5 E4:0.5 R:0.5 F4:0.5 E4:0.5 D4:1 C4:0.5 F4:0.5 E4:0.5 D4:0.5 ";
-                playSongText(a + "E4:1 " + a + "C4:1 " +
-                    // Mi-ye-hu-da u-mi-shom-ron, min ha-e-mek ve-ha-ga-lil
-                    "G4:1 G4:1 G4:2 As4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 F4:0.5 G4:1 " +
-                    "G4:0.5 R:0.5 G4:0.5 R:0.5 G4:0.5 R:0.5 G4:0.5 R:0.5 " +
-                    "As4:0.5 A4:0.5 G4:0.5 F4:0.25 F4:0.25 E4:0.5 F4:0.5 G4:1 " +
-                    // Pi-nu de-rech la-nu, bi-ku-rim i-ta-nu
-                    "C4:0.5 F4:0.5 F4:0.5 F4:0.5 F4:1 E4:0.5 D4:0.5 C4:0.5 E4:0.5 E4:0.5 E4:0.5 E4:1 D4:0.5 C4:0.5 " +
-                    hach + "G4:2 " + hach + "C4:2", 100, 1);
-                break;
-            }
-            case IsraeliSong.ShiratHaasavim: {
-                // Da le-cha she-kol ro-e ve-ro-e yesh lo ni-gun me-yu-chad mi-she-lo (Naomi Shemer)
-                const open = "E4:0.75 D4:0.25 D4:1.5 B3:0.5 D4:0.5 E4:0.5 Fs4:0.5 E4:0.25 E4:0.25 E4:3 ";
-                const turn = "G4:0.5 Fs4:0.25 G4:0.25 Fs4:0.5 E4:0.25 Fs4:0.25 ";
-                // ...ni-gun shel ha-a-sa-vim
-                const end = "B4:2.5 B4:0.5 A4:0.5 G4:0.5 Fs4:0.75 E4:0.25 D4:0.5 Cs4:0.5 B3:1.5 B3:0.25 B3:0.25 ";
-                const close = "E4:0.75 B3:0.25 E4:2.5 B3:0.25 B3:0.25 B3:4 ";
-                const verse1 = open + turn + "E4:1.5 B3:0.25 B3:0.25 B3:4 " +
-                    "E4:0.75 D4:0.25 D4:2 D4:0.5 E4:0.5 Fs4:0.5 E4:0.25 E4:0.25 Fs4:0.5 E4:2.5 " +
-                    turn + "A4:0.5 D4:1 D4:0.25 D4:0.25 " + end + close;
-                // Ka-ma ya-fe ve-na-e...
-                const verse2 = "E4:0.5 D4:0.25 D4:0.25 D4:1.5 B3:0.5 D4:0.5 E4:0.5 Fs4:0.5 E4:0.25 E4:0.25 E4:3 " +
-                    turn + "E4:1.5 B3:0.25 B3:0.25 B3:4 " + open + turn + "E4:1 D4:0.5 D4:0.5 " + end + close;
-                playSongText(verse1 + verse2, 80, 1);
-                break;
-            }
-            default: {
-                // Am Yis-ra-el chai, Am Yis-ra-el chai, Am Yis-ra-el, Am Yis-ra-el, Am Yis-ra-el chai
-                const a = "A4:0.5 A4:0.5 G4:0.5 E4:0.5 A4:2 A4:0.5 A4:0.5 G4:0.5 E4:0.5 A4:2 " +
-                    "C5:0.5 C5:0.5 B4:0.5 A4:0.5 C5:0.5 C5:0.5 B4:0.5 A4:0.5 D5:0.5 D5:0.5 B4:0.5 G4:0.5 ";
-                // Od a-vi-nu chai, od a-vi-nu chai, ...
-                const b = "E5:0.5 E5:0.5 E5:0.5 E5:0.5 E5:0.5 E5:0.5 E5:0.5 E5:0.5 D5:0.5 E5:0.5 D5:0.5 B4:0.5 G4:2 " +
-                    "D5:0.5 D5:0.5 D5:0.5 D5:0.5 D5:0.5 D5:0.5 D5:0.5 D5:0.5 E5:0.5 D5:0.5 C5:0.5 B4:0.5 ";
-                // each part is played twice, with a different ending the second time
-                playSongText(a + "A4:2 " + a + "A4:1 R:1 " + b + "A4:1 R:1 " + b + "A4:2", 120);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Play "Am Yisrael Chai" by Shlomo Carlebach
-     */
-    //% blockId=israel_am_yisrael_chai block="play Am Yisrael Chai"
-    //% group="Music" weight=80 blockHidden=true
-    export function playAmYisraelChai(): void {
-        playSong(IsraeliSong.AmYisraelChai);
     }
 
     // ---------------------------------------------------------------------

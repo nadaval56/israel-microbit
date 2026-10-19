@@ -1,14 +1,17 @@
 {
     "name": "israel",
     "version": "1.0.0",
-    "description": "Israeli blocks for micro:bit: the flag, Star of David, Hebrew text, Hatikvah and holiday animations",
+    "description": "Israeli blocks for micro:bit: Star of David, Hebrew text, Hatikvah, holiday songs, animations and Hebrew Morse code",
     "license": "MIT",
     "dependencies": {
-        "core": "*"
+        "core": "*",
+        "radio": "*"
     },
     "files": [
         "README.md",
         "israel.ts",
+        "morse.ts",
+        "songs.ts",
         "_locales/he/israel-strings.json",
         "_locales/he/israel-jsdoc-strings.json"
     ],

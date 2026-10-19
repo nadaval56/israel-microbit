@@ -71,8 +71,52 @@ input.onButtonPressed(Button.B, function () {
 | שירת העשבים (נעמי שמר) | כל השנה |
 | אלי אלי – הליכה לקיסריה | יום הזיכרון |
 
+המנגינות שמורות בקובץ `songs.ts`, שנוצר מהגרסה הקריאה שלהן ב-`tools/make_songs.py` (שתי אותיות לכל תו, כדי שהכל ייכנס גם במיקרוביט V1).
 המנגינות מתנגנות ברמקול של המיקרוביט, או ברמקול שמחובר לפין 0. בין התווים יש הפסקה קצרה, כך שתווים זהים ברצף נשמעים בנפרד.
 כל שיר מתנגן בקצב הטבעי שלו. בלוק "קבע קצב" (tempo) של MakeCode משנה את המהירות: 120 הוא הקצב הרגיל, מספר גדול יותר מאיץ ומספר קטן יותר מאט.
+
+### מורס עברי
+לכל אות עברית יש קוד מורס משלה (א `·–`, ב `–···`, ש `···`, ת `–` ...). האותיות הסופיות מקבלות את הקוד של האות הרגילה.
+נקודה היא צפצוף קצר, קו ארוך פי שלושה, ויש הפסקות קבועות בין אותיות ובין מילים.
+
+**1. המיקרוביט כמצפין**
+```blocks
+israel.setMorseSpeed(120)
+israel.setMorseOutput(MorseOutput.SoundAndLight)
+israel.playMorse("שלום")
+```
+* **נגן מורס** – הטקסט לא מוצג; במקומו יוצאים צפצופים, ובמסך מהבהבת נקודה (`+` קטן) או קו.
+* **קבע אורך נקודה** – מהירות המורס. **נגן מורס עם** – צליל, אור או שניהם.
+* **קוד מורס של** – מחזיר מחרוזת כמו `... .-.. . --` (רווח בין אותיות, `/` בין מילים).
+* **פענח מורס** – ההפך: מחרוזת מורס לטקסט עברי, כולל אותיות סופיות בסוף מילה.
+
+**2. חידת מורס ברדיו** (שני מיקרוביטים באותה קבוצת רדיו, עם ההרחבה בשניהם)
+```blocks
+// המיקרוביט ששולח
+israel.setMorseRadioGroup(7)
+input.onButtonPressed(Button.A, function () {
+    israel.sendMorse("חג שמח")
+})
+```
+```blocks
+// המיקרוביט שמקבל
+israel.setMorseRadioGroup(7)
+israel.receiveMorse()
+```
+השולח רק מהבהב. המקבל מצפצף ומהבהב, בלי להציג את הפתרון: המאזינים מפענחים בעצמם בעזרת טבלה.
+
+**3. טלגרף**
+```blocks
+israel.setMorseRadioGroup(7)
+israel.startTelegraph()
+```
+* **כפתור A** – נקודה, **כפתור B** – קו
+* **A+B ביחד** – סוף אות; האות שהוקשה מוצגת על המסך של המקיש
+* **ניעור** – רווח בין מילים
+
+כל הקשה נשלחת מיד ברדיו, והמיקרוביטים האחרים בקבוצה מצפצפים אותה בזמן אמת. אם שני ילדים מפעילים טלגרף, הם יכולים להתכתב.
+
+> הבלוקים "קלוט מורס ברדיו" ו"הפעל טלגרף" משתמשים באירוע הרדיו "כשמתקבל ערך" ובאירועי הכפתורים, ולכן אין להשתמש באותם אירועים במקום אחר באותה תוכנית.
 
 ### כיף
 ```blocks
@@ -101,7 +145,8 @@ input.onButtonPressed(Button.B, function () {
 
 MakeCode extension for the BBC micro:bit with Israeli blocks: the Star of David and other symbols,
 a built-in 5×5 Hebrew font for scrolling Hebrew text right-to-left, ready-made Hebrew greetings,
-Hatikvah and Israeli holiday songs, Star of David and fireworks animations, and Hanukkah candle lighting.
+Hatikvah and Israeli holiday songs, Star of David and fireworks animations, Hanukkah candle lighting,
+and Hebrew Morse code: an encoder, a radio Morse puzzle and a two-way telegraph.
 
 Add it in MakeCode via **Extensions** and the URL `https://github.com/nadaval56/israel-microbit`.
 Block names are translated to Hebrew when the editor language is set to Hebrew.
