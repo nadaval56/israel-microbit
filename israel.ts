@@ -61,7 +61,15 @@ enum IsraeliSong {
     //% block="Dayenu (Passover)"
     Dayenu,
     //% block="Eli Eli (Memorial Day)"
-    EliEli
+    EliEli,
+    //% block="Vesamachta Bechagecha (Sukkot)"
+    Vesamachta,
+    //% block="Ushavtem Mayim (Sukkot)"
+    UshavtemMayim,
+    //% block="Vaamartem Ko Lechai (Lag BaOmer)"
+    VaamartemKoLechai,
+    //% block="Salenu Al Ktefenu (Shavuot)"
+    Salenu
 }
 
 /**
@@ -437,8 +445,9 @@ namespace israel {
 
     // Plays a song at its own tempo. The MakeCode tempo block scales it:
     // the default tempo of 120 plays the song at its natural speed.
+    // Low songs can be raised by whole octaves, which the speaker plays louder.
     // Each note is cut a little short so that repeated notes are heard separately.
-    function playSongText(song: string, bpm: number): void {
+    function playSongText(song: string, bpm: number, octaveUp: number = 0): void {
         const beat = 60000 / bpm * 120 / music.tempo();
         const tokens = song.split(" ");
         for (let i = 0; i < tokens.length; i++) {
@@ -451,7 +460,7 @@ namespace israel {
                 music.rest(ms);
             } else {
                 const gap = Math.min(60, Math.idiv(ms, 5));
-                music.playTone(noteFrequency(note), ms - gap);
+                music.playTone(noteFrequency(note) * Math.pow(2, octaveUp), ms - gap);
                 music.rest(gap);
             }
         }
@@ -494,13 +503,13 @@ namespace israel {
                 break;
             case IsraeliSong.MaozTzur: {
                 // Ma-oz tzur ye-shu-a-ti, le-cha na-eh le-sha-be-ach
-                const a = "D5:1 A4:1 D5:1 G5:1 Fs5:1 E5:1 D5:2 A5:1 B5:1 E5:1 Fs5:0.5 G5:0.5 Fs5:1 E5:1 D5:2 ";
+                const a = "F4:1 C4:1 F4:1 As4:1 A4:1 G4:1 F4:1 R:1 C5:1 D5:1 G4:1 A4:0.5 As4:0.5 ";
                 // Le-et ta-chin mat-be-ach, mi-tzar ha-me-na-be-ach
-                const b = "A5:1.5 A5:0.5 B5:1 Cs6:1 D6:2 A5:2 D6:1 Cs6:1 B5:1 A5:1 A5:0.5 G5:0.5 Fs5:0.5 G5:0.5 E5:2 ";
+                const b = "C5:1.5 C5:0.5 D5:1 E5:1 F5:2 C5:2 F5:1 E5:1 D5:1 C5:1 C5:0.5 As4:0.5 A4:0.5 As4:0.5 G4:1 R:1 ";
                 // Az eg-mor be-shir miz-mor cha-nu-kat ha-miz-be-ach
-                const c = "Fs5:1.5 G5:0.5 A5:2 E5:1.5 Fs5:0.5 G5:1.5 G5:0.5 Fs5:1 Cs5:1 D5:1 G5:1 Fs5:1 G5:1 A5:2 " +
-                    "Fs5:1.5 G5:0.5 A5:2 E5:1.5 Fs5:0.5 G5:1.5 G5:0.5 Fs5:1 Cs5:1 D5:1 G5:1 Fs5:1 E5:1 D5:2";
-                playSongText(a + a + b + c, 92);
+                const c = "A4:1.5 As4:0.5 C5:1 R:0.5 C5:0.5 G4:1.5 A4:0.5 As4:1 R:1 A4:1 F4:1 D5:1 C5:0.5 As4:0.5 ";
+                playSongText(a + "A4:1 G4:1 F4:1 R:1 " + a + "A4:1 G4:1 F4:1 R:0.5 C5:0.5 " + b +
+                    c + "A4:1 As4:1 C5:1 R:1 " + c + "A4:1 G4:1 F4:2", 92, 1);
                 break;
             }
             case IsraeliSong.ChagPurim: {
@@ -526,12 +535,73 @@ namespace israel {
                 break;
             }
             case IsraeliSong.EliEli:
-                // E-li, E-li, she-lo yi-ga-mer le-o-lam
-                playSongText("A4:1 D5:2 D5:1 Cs5:0.5 D5:0.5 E5:2 E5:1 D5:0.5 E5:0.5 F5:2 F5:1 E5:0.5 F5:0.5 G5:2 G5:1 F5:0.5 G5:0.5 " +
-                    "A5:2 A5:1 G5:0.5 A5:0.5 As5:2 As5:1 As5:1 A5:2 A5:1 G5:1 A5:3 " +
-                    "A5:1 E5:2 F5:1 G5:1 F5:2 E5:1 D5:1 Cs5:2 D5:1 E5:1 D5:2 D5:1 D5:1 " +
-                    "As5:2 C6:1 As5:1 A5:2 G5:1 F5:1 E5:2 F5:1 E5:1 D5:3", 80);
+                // E-li, E-li, she-lo yi-ga-mer le-o-lam: ha-chol ve-ha-yam,
+                // rish-rush shel ha-ma-yim, be-rak ha-sha-ma-yim, te-fi-lat ha-a-dam
+                playSongText("B3:1 B4:3 Fs4:1 G4:3 E4:1 G4:1 Fs4:0.5 E4:0.5 Ds4:1 E4:0.5 Fs4:0.5 B3:3 B3:1 " +
+                    "E4:2 E4:1 E4:1 Fs4:3 E4:0.5 Fs4:0.5 G4:2 G4:1 Fs4:0.5 G4:0.5 A4:2 A4:1 G4:0.5 A4:0.5 " +
+                    "B4:2 B4:1 A4:0.5 B4:0.5 C5:2 C5:1 C5:1 B4:2 B4:1 A4:1 B4:3 B4:1 " +
+                    "Fs4:2 G4:1 A4:1 G4:3 Fs4:0.5 E4:0.5 Ds4:2 E4:1 Fs4:1 E4:2 E4:1 E4:1 " +
+                    "C5:2 D5:1 C5:1 B4:2 A4:1 G4:1 Fs4:2 G4:1 Fs4:1 E4:3", 84, 1);
                 break;
+            case IsraeliSong.Vesamachta: {
+                // Ve-sa-mach-ta be-cha-ge-cha ve-ha-yi-ta ach sa-me-ach
+                const a = "E4:0.5 E4:0.5 Fs4:0.5 E4:0.5 D4:2 Cs4:0.5 D4:0.5 E4:0.5 Fs4:0.5 E4:2 " +
+                    "E4:0.5 E4:0.5 Fs4:0.5 E4:0.5 D4:2 A4:0.5 A4:0.5 G4:0.5 Fs4:0.5 ";
+                const b = "G4:1 A4:1 B4:1 C5:1 D5:0.5 C5:1 B4:0.5 B4:0.5 A4:0.25 B4:0.25 A4:0.5 G4:0.5 " +
+                    "B4:0.5 A4:0.5 A4:0.5 G4:0.5 ";
+                playSongText(a + "G4:2 " + a + "E4:2 " + b + "G4:1 A4:1 B4:2 E5:1 R:1 " +
+                    b + "G4:0.5 Fs4:0.5 Fs4:0.5 E4:0.5 E4:2", 110, 1);
+                break;
+            }
+            case IsraeliSong.UshavtemMayim: {
+                // U-sh'-av-tem ma-yim be-sa-son mi-ma-ay-nei ha-ye-shu-a
+                const verse = "D5:0.25 D5:0.25 D5:0.5 E5:0.5 F5:0.25 E5:0.25 D5:0.5 F5:0.5 G5:0.5 A5:0.75 G5:0.25 " +
+                    "F5:0.5 A5:0.5 C6:0.5 As5:0.5 A5:0.5 G5:0.5 A5:0.5 " +
+                    "D5:0.25 D5:0.25 D5:0.5 E5:0.5 F5:0.25 E5:0.25 D5:0.5 F5:0.5 G5:0.5 A5:1 " +
+                    "D6:0.5 D6:0.5 C6:0.5 C6:0.5 A5:0.5 C6:0.5 D6:1 ";
+                // Ma-yim ma-yim ma-yim ma-yim, hoi ma-yim be-sa-son
+                const mayim = "D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 D6:0.5 R:0.5 D6:0.5 C6:0.5 C6:0.5 A5:0.5 ";
+                // Hei hei hei hei, ma-yim ma-yim ...
+                const hei = "C6:1 C6:1 C6:1 C6:1 " +
+                    "C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 " +
+                    "F5:0.5 G5:0.5 A5:0.25 As5:0.25 A5:0.5 G5:0.5 F5:0.5 C6:1 " +
+                    "C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 C6:0.5 C6:0.5 As5:0.25 A5:0.25 G5:0.5 " +
+                    "A5:0.5 A5:0.5 F5:0.25 E5:0.25 D5:0.5 F5:0.5 E5:0.5 D5:1";
+                playSongText(verse + mayim + "C6:0.5 D6:1 " + mayim + "G5:0.5 A5:1 " + hei, 100);
+                break;
+            }
+            case IsraeliSong.VaamartemKoLechai: {
+                // Va-a-mar-tem ko le-chai, ra-bi shim-on bar yo-chai
+                const a = "G4:0.75 A4:0.25 G4:0.25 A4:0.25 G4:0.25 A4:0.25 G4:0.5 A4:0.5 G4:1 ";
+                // Kol ri-na vi-shu-a be-a-ho-lei tza-di-kim
+                const b = "B4:0.75 G4:0.25 G4:0.5 G4:0.5 ";
+                // Ku-lo ha-dar me-a-shan tza-dik
+                const c = "G4:0.5 G4:0.5 G4:0.25 A4:0.25 G4:0.25 Fs4:0.25 E4:0.5 B3:0.5 E4:1.5 R:0.5 ";
+                playSongText(a + "G4:0.5 Fs4:0.5 E4:0.5 E4:0.25 A4:0.25 G4:0.5 Fs4:0.5 E4:1 " +
+                    a + "G4:0.5 G4:0.5 A4:0.5 A4:0.25 C5:0.25 B4:0.5 A4:0.5 G4:1.5 R:0.5 " +
+                    "G4:1 G4:0.5 G4:0.5 G4:0.5 G4:0.5 G4:0.25 A4:0.25 G4:0.25 G4:0.25 " +
+                    "G4:0.25 Fs4:0.25 E4:0.5 Fs4:0.5 G4:0.5 E4:0.5 B3:0.5 E4:1 " +
+                    b + "B4:0.75 G4:0.25 G4:0.5 R:0.25 G4:0.25 G4:0.5 G4:0.5 A4:0.5 A4:0.25 C5:0.25 B4:0.5 A4:0.25 B4:0.25 G4:1 " +
+                    c + c +
+                    "G4:0.5 G4:0.5 G4:0.5 G4:0.25 G4:0.25 G4:0.5 G4:0.5 A4:1 " +
+                    "A4:0.5 A4:0.5 A4:0.5 A4:0.25 A4:0.25 G4:0.5 E4:0.5 G4:2", 100, 1);
+                break;
+            }
+            case IsraeliSong.Salenu: {
+                // Sa-le-nu al ke-te-fe-nu, ra-shei-nu a-tu-rim
+                const a = "C4:0.5 G4:1 E4:0.5 F4:0.5 E4:0.5 D4:0.5 C4:0.5 D4:0.5 F4:1 E4:0.5 D4:0.5 C4:0.5 ";
+                // Hach hach ba-tof, ve-hach ba-cha-lil
+                const hach = "G4:0.5 R:0.5 E4:0.5 R:0.5 F4:0.5 E4:0.5 D4:1 C4:0.5 F4:0.5 E4:0.5 D4:0.5 ";
+                playSongText(a + "E4:1 " + a + "C4:1 " +
+                    // Mi-ye-hu-da u-mi-shom-ron, min ha-e-mek ve-ha-ga-lil
+                    "G4:1 G4:1 G4:2 As4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 F4:0.5 G4:1 " +
+                    "G4:0.5 R:0.5 G4:0.5 R:0.5 G4:0.5 R:0.5 G4:0.5 R:0.5 " +
+                    "As4:0.5 A4:0.5 G4:0.5 F4:0.25 F4:0.25 E4:0.5 F4:0.5 G4:1 " +
+                    // Pi-nu de-rech la-nu, bi-ku-rim i-ta-nu
+                    "C4:0.5 F4:0.5 F4:0.5 F4:0.5 F4:1 E4:0.5 D4:0.5 C4:0.5 E4:0.5 E4:0.5 E4:0.5 E4:1 D4:0.5 C4:0.5 " +
+                    hach + "G4:2 " + hach + "C4:2", 100, 1);
+                break;
+            }
             default: {
                 // Am Yis-ra-el chai, Am Yis-ra-el chai, Am Yis-ra-el, Am Yis-ra-el, Am Yis-ra-el chai
                 const a = "A4:0.5 A4:0.5 G4:0.5 E4:0.5 A4:2 A4:0.5 A4:0.5 G4:0.5 E4:0.5 A4:2 " +

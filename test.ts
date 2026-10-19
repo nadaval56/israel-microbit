@@ -15,3 +15,4 @@ input.onButtonPressed(Button.AB, function () {
     israel.playSong(IsraeliSong.AmYisraelChai)
 })
 israel.showSymbol(IsraelSymbol.Dreidel)
+israel.playSong(IsraeliSong.Salenu)
