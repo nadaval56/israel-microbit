@@ -1,6 +1,8 @@
 // tests go here; this will not be compiled when this package is used as an extension.
 israel.showSymbol(IsraelSymbol.StarOfDavid)
 israel.showHebrew("שלום 2026!")
+israel.scrollPicture(IsraelPicture.Flag)
+israel.scrollHanukkiah(3)
 input.onButtonPressed(Button.A, function () {
     israel.playHatikvah()
 })

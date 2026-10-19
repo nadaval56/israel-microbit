@@ -27,9 +27,13 @@ israel.showSymbol(IsraelSymbol.StarOfDavid)
 israel.playAnimation(IsraelAnimation.StarOfDavid)
 israel.playAnimation(IsraelAnimation.Fireworks)
 israel.lightHanukkiah(3)
+israel.scrollPicture(IsraelPicture.Menorah)
+israel.scrollHanukkiah(5)
 ```
 * **מגן דוד** – שני המשולשים מתחלפים ואז הכוכב פועם
 * **זיקוקי יום העצמאות** – זיקוקים שמתפוצצים ונגמרים במגן דוד
+* **גלול תמונה** – תמונה רחבה שנגללת על המסך: חנוכייה (8 נרות ושמש), מנורת 7 קנים, דגל ישראל, ירושלים
+* **גלול חנוכייה ללילה...** – חנוכייה נגללת שבה דולקים רק הנרות של אותו לילה, מימין לשמאל
 * **הדלק נרות חנוכה ללילה...** – השמש נדלק, אחריו הנרות אחד אחד, עם להבות מהבהבות
 
 ### עברית על מסך הלדים

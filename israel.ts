@@ -21,6 +21,20 @@ enum IsraelAnimation {
 }
 
 /**
+ * Wide pictures that scroll across the screen
+ */
+enum IsraelPicture {
+    //% block="Hanukkiah"
+    Hanukkiah,
+    //% block="Menorah"
+    Menorah,
+    //% block="Israeli flag"
+    Flag,
+    //% block="Jerusalem"
+    Jerusalem
+}
+
+/**
  * Ready-made Hebrew greetings
  */
 enum HebrewGreeting {
@@ -183,6 +197,78 @@ namespace israel {
             case IsraelAnimation.StarOfDavid: starOfDavid(); break;
             case IsraelAnimation.Fireworks: fireworks(); break;
         }
+    }
+
+    // Wide pictures: rows separated by "|", one brightness digit (0-9) per LED
+    function picturePattern(picture: IsraelPicture): string {
+        switch (picture) {
+            case IsraelPicture.Menorah: return "9090909090909|4040404040404|4040404040404|3555555555553|0000055500000";
+            case IsraelPicture.Flag: return "333333393333333|000009999900000|000000909000000|000009999900000|333333393333333";
+            case IsraelPicture.Jerusalem: return "000900000000000000|009990000005550000|009090000055555000|" +
+                "959595959595959595|999999999999999999";
+            default: return hanukkiahPattern(8);
+        }
+    }
+
+    // A hanukkiah 17 LEDs wide: eight candles with the shamash raised in the middle.
+    // Candles are lit from right to left, one more each night.
+    function hanukkiahPattern(night: number): string {
+        const order = [16, 14, 12, 10, 6, 4, 2, 0];
+        let flames = "";
+        let candles = "";
+        for (let x = 0; x < 17; x++) {
+            let lit = false;
+            for (let i = 0; i < night; i++) {
+                if (order[i] == x) lit = true;
+            }
+            const candle = x % 2 == 0 && x != 8;
+            flames += x == 8 ? "4" : lit ? "9" : "0";
+            candles += candle || x == 8 ? "4" : "0";
+        }
+        return "00000000900000000|" + flames + "|" + candles + "|55555555555555555|00000005550000000";
+    }
+
+    // Scrolls a pattern from right to left across the screen
+    function scrollPattern(pattern: string, interval: number): void {
+        const rows = pattern.split("|");
+        const width = rows[0].length;
+        for (let s = 0; s <= width + 4; s++) {
+            for (let x = 0; x < 5; x++) {
+                const col = s + x - 4;
+                for (let y = 0; y < 5; y++) {
+                    const d = col >= 0 && col < width ? rows[y].charCodeAt(col) - 48 : 0;
+                    led.plotBrightness(x, y, Math.idiv(d * 255, 9));
+                }
+            }
+            basic.pause(interval);
+        }
+    }
+
+    /**
+     * Scroll a wide picture across the screen
+     * @param picture the picture to scroll
+     * @param interval speed of scroll in milliseconds, eg: 150
+     */
+    //% blockId=israel_scroll_picture block="scroll picture %picture||speed %interval ms"
+    //% interval.defl=150 interval.min=20 interval.max=1000
+    //% expandableArgumentMode="toggle"
+    //% group="Animations" weight=95
+    export function scrollPicture(picture: IsraelPicture, interval: number = 150): void {
+        scrollPattern(picturePattern(picture), interval);
+    }
+
+    /**
+     * Scroll a hanukkiah with the candles of a given night lit
+     * @param night the night of Hanukkah, from 1 to 8, eg: 1
+     * @param interval speed of scroll in milliseconds, eg: 150
+     */
+    //% blockId=israel_scroll_hanukkiah block="scroll Hanukkiah for night %night||speed %interval ms"
+    //% night.min=1 night.max=8 night.defl=1
+    //% interval.defl=150 interval.min=20 interval.max=1000
+    //% expandableArgumentMode="toggle"
+    //% group="Animations" weight=93
+    export function scrollHanukkiah(night: number, interval: number = 150): void {
+        scrollPattern(hanukkiahPattern(Math.max(0, Math.min(8, Math.round(night)))), interval);
     }
 
     /**
