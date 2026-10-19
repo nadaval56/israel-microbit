@@ -1,7 +1,6 @@
 // tests go here; this will not be compiled when this package is used as an extension.
-israel.showFlag()
 israel.showSymbol(IsraelSymbol.StarOfDavid)
-israel.playAnimation(IsraelAnimation.FlagRaising)
+israel.playAnimation(IsraelAnimation.Fireworks)
 israel.lightHanukkiah(8)
 israel.showHebrew("שלום 2026!")
 israel.showGreeting(HebrewGreeting.AmIsraelChai)
@@ -10,6 +9,9 @@ input.onButtonPressed(Button.A, function () {
     israel.playHatikvah()
 })
 input.onButtonPressed(Button.B, function () {
-    israel.playAmYisraelChai()
+    israel.playSong(IsraeliSong.Sevivon)
+})
+input.onButtonPressed(Button.AB, function () {
+    israel.playSong(IsraeliSong.AmYisraelChai)
 })
 israel.showSymbol(IsraelSymbol.Dreidel)

@@ -1,7 +1,7 @@
 # 🇮🇱 ישראל – בלוקים ישראליים למיקרוביט
 
-הרחבה ל-[MakeCode](https://makecode.microbit.org) עם בלוקים בכחול-לבן: דגל ישראל, מגן דוד, סמלי המדינה,
-טקסט בעברית על מסך הלדים, ניגון "התקווה" ואנימציות לחגים.
+הרחבה ל-[MakeCode](https://makecode.microbit.org) עם בלוקים בכחול-לבן: מגן דוד וסמלים,
+טקסט בעברית על מסך הלדים, "התקווה", שירי חגים ואנימציות.
 
 ## איך מוסיפים את ההרחבה
 
@@ -16,25 +16,20 @@
 
 ### סמלים
 ```blocks
-israel.showFlag()
 israel.showSymbol(IsraelSymbol.StarOfDavid)
 ```
-סמלים זמינים: דגל ישראל, מגן דוד, מנורה, חנוכייה, רימון, סביבון, ספר תורה.
-הסמלים משתמשים בעוצמות אור שונות: הצורה עצמה בהירה, ופרטי רקע (כמו פסי הדגל) עמומים יותר.
+סמלים זמינים: מגן דוד, סביבון, ספר תורה.
+הסמלים משתמשים בעוצמות אור שונות: הצורה עצמה בהירה, ופרטי רקע עמומים יותר.
 הבלוק `תמונה של` מחזיר את הסמל כתמונה, לשימוש עם בלוקי התמונות של MakeCode.
 
 ### אנימציות
 ```blocks
-israel.playAnimation(IsraelAnimation.FlagRaising)
-israel.playAnimation(IsraelAnimation.WavingFlag)
 israel.playAnimation(IsraelAnimation.StarOfDavid)
 israel.playAnimation(IsraelAnimation.Fireworks)
 israel.lightHanukkiah(3)
 ```
-* **דגל מתנופף** – גל של אור עובר על הדגל
-* **הנפת הדגל** – הדגל עולה מלמטה ומתנופף
 * **מגן דוד** – שני המשולשים מתחלפים ואז הכוכב פועם
-* **זיקוקי יום העצמאות** – זיקוקים שמתפוצצים ונגמרים בדגל
+* **זיקוקי יום העצמאות** – זיקוקים שמתפוצצים ונגמרים במגן דוד
 * **הדלק נרות חנוכה ללילה...** – השמש נדלק, אחריו הנרות אחד אחד, עם להבות מהבהבות
 
 ### עברית על מסך הלדים
@@ -51,19 +46,28 @@ israel.showGreeting(HebrewGreeting.AmIsraelChai)
 ### מוזיקה
 ```blocks
 input.onButtonPressed(Button.A, function () {
-    israel.showFlag()
+    israel.showSymbol(IsraelSymbol.StarOfDavid)
     israel.playHatikvah()
 })
 input.onButtonPressed(Button.B, function () {
-    israel.showSymbol(IsraelSymbol.StarOfDavid)
-    israel.playAmYisraelChai()
+    israel.showSymbol(IsraelSymbol.Dreidel)
+    israel.playSong(IsraeliSong.Sevivon)
 })
 ```
-* **נגן את התקווה** – פתיחת ההמנון ("כל עוד בלבב פנימה...")
-* **נגן עם ישראל חי** – השיר של שלמה קרליבך, שני החלקים עם החזרות
+* **נגן את התקווה** – ההמנון המלא
+* **נגן שיר** – בוחרים שיר מהרשימה:
+
+| שיר | מתי |
+|---|---|
+| עם ישראל חי (שלמה קרליבך) | כל השנה |
+| סביבון | חנוכה |
+| מעוז צור | חנוכה |
+| חג פורים | פורים |
+| דיינו | פסח |
+| אלי אלי – הליכה לקיסריה | יום הזיכרון |
 
 המנגינות מתנגנות ברמקול של המיקרוביט, או ברמקול שמחובר לפין 0. בין התווים יש הפסקה קצרה, כך שתווים זהים ברצף נשמעים בנפרד.
-המהירות נקבעת לפי בלוק "קבע קצב" (tempo) של MakeCode.
+כל שיר מתנגן בקצב הטבעי שלו. בלוק "קבע קצב" (tempo) של MakeCode משנה את המהירות: 120 הוא הקצב הרגיל, מספר גדול יותר מאיץ ומספר קטן יותר מאט.
 
 ### כיף
 ```blocks
@@ -74,7 +78,7 @@ basic.showNumber(israel.israelAge(2026))
 ## דוגמה: יום העצמאות
 ```blocks
 input.onButtonPressed(Button.A, function () {
-    israel.playAnimation(IsraelAnimation.FlagRaising)
+    israel.showSymbol(IsraelSymbol.StarOfDavid)
     israel.playHatikvah()
 })
 input.onButtonPressed(Button.B, function () {
@@ -84,15 +88,15 @@ input.onButtonPressed(Button.B, function () {
 ```
 
 ## הערה על צבעים
-הבלוקים צבועים בכחול של דגל ישראל. הלדים של המיקרוביט עצמו אדומים, כך שהדגל על הלוח מוצג בצורה ולא בצבע.
+הבלוקים צבועים בכחול של דגל ישראל. הלדים של המיקרוביט עצמו אדומים.
 
 ---
 
 ## English
 
-MakeCode extension for the BBC micro:bit with Israeli blocks: the Israeli flag, the Star of David and other
-national symbols, a built-in 5×5 Hebrew font for scrolling Hebrew text right-to-left, ready-made Hebrew
-greetings, the opening of Hatikvah, flag and fireworks animations, and Hanukkah candle lighting.
+MakeCode extension for the BBC micro:bit with Israeli blocks: the Star of David and other symbols,
+a built-in 5×5 Hebrew font for scrolling Hebrew text right-to-left, ready-made Hebrew greetings,
+Hatikvah and Israeli holiday songs, Star of David and fireworks animations, and Hanukkah candle lighting.
 
 Add it in MakeCode via **Extensions** and the URL `https://github.com/nadaval56/israel-microbit`.
 Block names are translated to Hebrew when the editor language is set to Hebrew.
