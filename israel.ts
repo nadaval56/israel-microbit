@@ -544,16 +544,12 @@ namespace israel {
                     "C5:2 D5:1 C5:1 B4:2 A4:1 G4:1 Fs4:2 G4:1 Fs4:1 E4:3", 84, 1);
                 break;
             case IsraeliSong.Vesamachta: {
-                // Chasidic melody: a niggun, then "ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach"
-                const niggun = "D4:0.25 E4:0.25 F4:0.25 G4:0.25 A4:0.5 A4:0.5 A4:0.5 A4:0.5 A4:0.5 A4:0.5 " +
-                    "As4:0.5 As4:1 A4:0.5 A4:0.5 G4:0.25 A4:0.25 G4:0.5 F4:0.5 " +
-                    "As4:0.5 A4:1 G4:0.5 G4:0.5 D4:0.25 D4:0.25 D4:0.5 D4:0.5 " +
-                    "F4:0.5 A4:0.5 G4:0.5 As4:0.5 A4:1 G4:1 ";
+                // Ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach (Chasidic melody)
                 const words = "D5:1 A4:1 As4:0.5 A4:1.5 D5:1 A4:1 As4:0.5 A4:1.5 D5:1 C5:1 As4:1 A4:1 " +
                     "G4:0.5 G4:0.5 As4:0.5 A4:0.5 G4:2 " +
                     "C5:1 G4:1 A4:0.5 G4:1.5 C5:1 G4:1 A4:0.5 G4:1.5 C5:1 As4:1 A4:1 G4:1 " +
                     "F4:0.5 F4:0.5 A4:0.5 G4:0.5 F4:2 ";
-                playSongText(niggun + "F4:1 C5:0.5 As4:0.5 A4:2 " + niggun + "F4:1 E4:1 D4:2 " + words + words, 110, 1);
+                playSongText(words + words, 110, 1);
                 break;
             }
             case IsraeliSong.UshavtemMayim: {
@@ -575,10 +571,11 @@ namespace israel {
             }
             case IsraeliSong.BarYochai: {
                 // Bar Yo-chai, nim-shach-ta ash-re-cha, she-men sa-son me-cha-ve-re-cha
-                const refrain = "F4:1.5 G4:0.5 F4:1.5 D4:0.5 G4:1 G4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " +
-                    "E4:1.5 G4:0.5 G4:0.5 F4:0.5 F4:1 F4:0.5 E4:0.5 D4:0.5 E4:0.5 F4:0.5 G4:0.5 F4:1 " +
-                    "F4:1.5 G4:0.5 G4:1 G4:1 A4:0.5 As4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 ";
-                playSongText(refrain + refrain, 90, 1);
+                const end = "R:0.5 E4:1 G4:0.5 G4:0.5 F4:0.5 F4:1 F4:0.5 E4:0.5 D4:0.5 E4:0.5 F4:1 F4:1 " +
+                    "F4:1.5 G4:0.5 G4:1.5 G4:0.5 A4:0.5 As4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " +
+                    "R:0.5 A4:1 A4:0.5 A4:1 D4:1 D4:0.5 C4:0.5 B3:0.5 C4:0.5 D4:1 D4:1 ";
+                playSongText("F4:1.5 G4:0.5 F4:1.5 D4:0.5 G4:1 G4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " + end +
+                    "G4:1.5 G4:0.5 F4:0.5 E4:0.5 D4:1 G4:0.5 G4:0.5 G4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:1 " + end, 108, 1);
                 break;
             }
             case IsraeliSong.Salenu: {
