@@ -598,12 +598,12 @@ namespace israel {
             case IsraeliSong.Hashkediya: {
                 // Ha-shke-di-ya po-ra-chat ve-she-mesh paz zo-ra-chat,
                 // tzi-po-rim me-rosh kol gag me-vas-rot et bo he-chag (Menashe Rabina)
-                const verse = "D4:0.5 D4:0.5 D4:0.5 D4:0.5 D4:0.5 A4:1 Fs4:0.5 Fs4:0.5 G4:0.5 G4:0.5 B4:0.5 B4:0.5 A4:1 Fs4:1 " +
-                    "E4:0.5 Fs4:0.5 G4:0.5 Fs4:0.5 E4:0.5 B4:0.5 A4:1 A4:0.75 B4:0.25 A4:0.5 G4:0.5 Fs4:0.5 E4:0.5 D4:1 ";
+                const verse = "C4:0.5 C4:0.5 C4:0.5 C4:0.5 C4:0.5 G4:1 E4:0.5 E4:0.5 G4:0.5 G4:0.5 A4:0.5 A4:0.5 G4:1 E4:1 " +
+                    "C4:0.5 D4:0.5 E4:0.5 C4:0.5 E4:0.5 A4:0.5 G4:1 G4:0.5 G4:0.5 A4:0.5 G4:0.5 E4:0.5 G4:0.5 C4:1 ";
                 // Tu bi-shvat hi-gi-a, chag ha-i-la-not
-                const chorus = "D5:0.5 D5:0.5 B4:0.5 B4:0.5 A4:1 Fs4:1 ";
-                playSongText(verse + chorus + "D4:0.5 D4:0.5 Fs4:0.5 D4:0.5 A4:3 " +
-                    chorus + "Fs4:0.5 Fs4:0.5 E4:0.5 Fs4:0.5 D4:2", 100, 1);
+                const chorus = "C5:0.5 C5:0.5 A4:0.5 A4:0.5 G4:1 E4:1 ";
+                playSongText(verse + chorus + "C4:0.5 C4:0.5 E4:0.5 C4:0.5 G4:2 " +
+                    chorus + "G4:0.5 G4:0.5 E4:0.5 G4:0.5 C4:2", 100, 1);
                 break;
             }
             default: {
