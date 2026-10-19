@@ -141,7 +141,7 @@ def encode(melody):
 def song_call(name, bpm, octave):
     for n, _, b, o, _, _, melody in SONGS:
         if n == name:
-            return 'playNotes("%s", %d, %d);' % (encode(melody), b, o)
+            return 'playNotes("%s", %d, %d, speed);' % (encode(melody), b, o)
     raise KeyError(name)
 
 
@@ -167,11 +167,12 @@ def generate():
     w("")
     w("    // Plays a song stored two characters per note: the MIDI note number (\"!\" = rest)")
     w("    // and the length in sixteenths (\"a\" = 1). The song keeps its own tempo, scaled by")
-    w("    // the MakeCode tempo block (120 = natural speed), and can be raised by octaves,")
-    w("    // which the speaker plays louder. Each note is cut a little short so that")
-    w("    // repeated notes are heard separately.")
-    w("    function playNotes(notes: string, bpm: number, octaveUp: number): void {")
-    w("        const sixteenth = Math.idiv(1800000, bpm * music.tempo());")
+    w("    // the speed in percent and by the MakeCode tempo block (120 = natural speed), and")
+    w("    // can be raised by octaves, which the speaker plays louder. Each note is cut a")
+    w("    // little short so that repeated notes are heard separately.")
+    w("    function playNotes(notes: string, bpm: number, octaveUp: number, speed: number): void {")
+    w("        speed = Math.max(10, Math.min(400, speed));")
+    w("        const sixteenth = Math.idiv(180000000, bpm * music.tempo() * speed);")
     w("        for (let i = 0; i + 1 < notes.length; i += 2) {")
     w("            const midi = notes.charCodeAt(i);")
     w("            const ms = (notes.charCodeAt(i + 1) - 96) * sixteenth;")
@@ -190,10 +191,13 @@ def generate():
     hat = [s for s in SONGS if s[0] == "Hatikvah"][0]
     w("    /**")
     w("     * Play Hatikvah, the national anthem of Israel")
+    w("     * @param speed speed in percent, 100 is the natural speed, eg: 100")
     w("     */")
-    w('    //% blockId=israel_hatikvah block="play Hatikvah"')
+    w('    //% blockId=israel_hatikvah block="play Hatikvah||at speed %speed percent"')
+    w('    //% speed.defl=100 speed.min=25 speed.max=300')
+    w('    //% expandableArgumentMode="toggle"')
     w('    //% group="Music" weight=100')
-    w("    export function playHatikvah(): void {")
+    w("    export function playHatikvah(speed: number = 100): void {")
     w("        // " + hat[4] + " (" + hat[5] + ")")
     w("        " + song_call("Hatikvah", hat[2], hat[3]))
     w("    }")
@@ -201,10 +205,13 @@ def generate():
     w("    /**")
     w("     * Play an Israeli song or a holiday song")
     w("     * @param song the song to play")
+    w("     * @param speed speed in percent, 100 is the natural speed, eg: 100")
     w("     */")
-    w('    //% blockId=israel_play_song block="play song %song"')
+    w('    //% blockId=israel_play_song block="play song %song||at speed %speed percent"')
+    w('    //% speed.defl=100 speed.min=25 speed.max=300')
+    w('    //% expandableArgumentMode="toggle"')
     w('    //% group="Music" weight=90')
-    w("    export function playSong(song: IsraeliSong): void {")
+    w("    export function playSong(song: IsraeliSong, speed: number = 100): void {")
     w("        switch (song) {")
     for name, block, bpm, octave, lyrics, source, _ in names:
         w("            case IsraeliSong." + name + ":")

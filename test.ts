@@ -7,7 +7,7 @@ input.onButtonPressed(Button.A, function () {
     israel.playHatikvah()
 })
 input.onButtonPressed(Button.B, function () {
-    israel.playSong(IsraeliSong.Sevivon)
+    israel.playSong(IsraeliSong.Sevivon, 150)
 })
 israel.setMorseRadioGroup(7)
 israel.setMorseSpeed(100)
