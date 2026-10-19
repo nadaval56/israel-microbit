@@ -12,8 +12,8 @@ enum IsraelSymbol {
     Hanukkiah,
     //% block="pomegranate"
     Pomegranate,
-    //% block="Tower of David"
-    TowerOfDavid,
+    //% block="dreidel"
+    Dreidel,
     //% block="Torah scroll"
     Torah
 }
@@ -70,6 +70,37 @@ namespace israel {
     // Symbols
     // ---------------------------------------------------------------------
 
+    // 5x5 patterns, rows separated by "|", one brightness digit (0-9) per LED.
+    // Bright parts are the shape itself, dim parts are background details
+    // such as the flag's stripes.
+    function symbolPattern(symbol: IsraelSymbol): string {
+        switch (symbol) {
+            case IsraelSymbol.StarOfDavid: return "00900|99999|09090|99999|00900";
+            case IsraelSymbol.Menorah: return "90909|40404|04440|00400|44444";
+            case IsraelSymbol.Hanukkiah: return "00900|99499|44444|00400|04440";
+            case IsraelSymbol.Pomegranate: return "05050|09990|99999|99999|09990";
+            case IsraelSymbol.Dreidel: return "00900|99999|99999|09990|00900";
+            case IsraelSymbol.Torah: return "90009|94449|94449|94449|90009";
+            default: return "22922|99999|09090|99999|22922";
+        }
+    }
+
+    // brightness of the LED at (x, y) in a pattern, scaled so that 9 is `level`
+    function patternBrightness(pattern: string, x: number, y: number, level: number): number {
+        const d = pattern.charCodeAt(y * 6 + x) - 48;
+        return Math.idiv(d * level, 9);
+    }
+
+    // draw a pattern shifted down by dy rows
+    function drawPattern(pattern: string, dy: number, level: number): void {
+        for (let x = 0; x < 5; x++) {
+            for (let y = 0; y < 5; y++) {
+                const sy = y - dy;
+                led.plotBrightness(x, y, sy >= 0 && sy < 5 ? patternBrightness(pattern, x, sy, level) : 0);
+            }
+        }
+    }
+
     /**
      * Get the 5x5 image of an Israeli symbol
      * @param symbol the symbol to draw
@@ -77,57 +108,20 @@ namespace israel {
     //% blockId=israel_symbol_image block="image of %symbol"
     //% group="Symbols" weight=80
     export function symbolImage(symbol: IsraelSymbol): Image {
-        switch (symbol) {
-            case IsraelSymbol.StarOfDavid: return images.createImage(`
-                . . # . .
-                # # # # #
-                . # . # .
-                # # # # #
-                . . # . .
-                `);
-            case IsraelSymbol.Menorah: return images.createImage(`
-                # . # . #
-                # . # . #
-                # # # # #
-                . . # . .
-                . # # # .
-                `);
-            case IsraelSymbol.Hanukkiah: return images.createImage(`
-                # # # # #
-                # # . # #
-                # # # # #
-                . . # . .
-                . # # # .
-                `);
-            case IsraelSymbol.Pomegranate: return images.createImage(`
-                . # . # .
-                . . # . .
-                . # # # .
-                # # # # #
-                . # # # .
-                `);
-            case IsraelSymbol.TowerOfDavid: return images.createImage(`
-                . . # . .
-                . # # # .
-                . # . # .
-                # # # # #
-                # # # # #
-                `);
-            case IsraelSymbol.Torah: return images.createImage(`
-                # . . . #
-                # # # # #
-                # . # . #
-                # # # # #
-                # . . . #
-                `);
-            default: return images.createImage(`
-                # # # # #
-                . . # . .
-                . # . # .
-                . . # . .
-                # # # # #
-                `);
+        const pattern = symbolPattern(symbol);
+        const img = images.createImage(`
+            . . . . .
+            . . . . .
+            . . . . .
+            . . . . .
+            . . . . .
+            `);
+        for (let x = 0; x < 5; x++) {
+            for (let y = 0; y < 5; y++) {
+                img.setPixelBrightness(x, y, patternBrightness(pattern, x, y, 255));
+            }
         }
+        return img;
     }
 
     /**
@@ -137,7 +131,7 @@ namespace israel {
     //% blockId=israel_show_symbol block="show %symbol"
     //% group="Symbols" weight=100
     export function showSymbol(symbol: IsraelSymbol): void {
-        symbolImage(symbol).showImage(0);
+        drawPattern(symbolPattern(symbol), 0, 255);
     }
 
     /**
@@ -153,24 +147,14 @@ namespace israel {
     // Animations
     // ---------------------------------------------------------------------
 
-    function drawImage(img: Image, dy: number, brightness: number): void {
-        for (let x = 0; x < 5; x++) {
-            for (let y = 0; y < 5; y++) {
-                const sy = y - dy;
-                const on = sy >= 0 && sy < 5 && img.pixel(x, sy);
-                led.plotBrightness(x, y, on ? brightness : 0);
-            }
-        }
-    }
-
-    function wave(img: Image, frames: number): void {
+    function wave(pattern: string, frames: number): void {
         // a band of light runs across the image, like a flag in the wind
         const levels = [255, 190, 110, 50, 110, 190];
         for (let t = 0; t < frames; t++) {
             for (let x = 0; x < 5; x++) {
-                const b = levels[(t + 6 - x) % 6];
+                const level = levels[(t + 6 - x) % 6];
                 for (let y = 0; y < 5; y++) {
-                    led.plotBrightness(x, y, img.pixel(x, y) ? b : 0);
+                    led.plotBrightness(x, y, patternBrightness(pattern, x, y, level));
                 }
             }
             basic.pause(90);
@@ -178,48 +162,36 @@ namespace israel {
     }
 
     function flagRaising(): void {
-        const flag = symbolImage(IsraelSymbol.Flag);
+        const flag = symbolPattern(IsraelSymbol.Flag);
         for (let dy = 5; dy >= 0; dy--) {
-            drawImage(flag, dy, 255);
+            drawPattern(flag, dy, 255);
             basic.pause(250);
         }
         wave(flag, 18);
-        drawImage(flag, 0, 255);
+        drawPattern(flag, 0, 255);
     }
 
     function starOfDavid(): void {
-        const up = images.createImage(`
-            . . # . .
-            . # . # .
-            . # . # .
-            # # # # #
-            . . . . .
-            `);
-        const down = images.createImage(`
-            . . . . .
-            # # # # #
-            . # . # .
-            . # . # .
-            . . # . .
-            `);
+        const up = "00900|09090|09090|99999|00000";
+        const down = "00000|99999|09090|09090|00900";
         for (let i = 0; i < 2; i++) {
-            up.showImage(0);
+            drawPattern(up, 0, 255);
             basic.pause(300);
-            down.showImage(0);
+            drawPattern(down, 0, 255);
             basic.pause(300);
         }
-        const star = symbolImage(IsraelSymbol.StarOfDavid);
+        const star = symbolPattern(IsraelSymbol.StarOfDavid);
         for (let i = 0; i < 2; i++) {
             for (let b = 40; b <= 255; b += 25) {
-                drawImage(star, 0, b);
+                drawPattern(star, 0, b);
                 basic.pause(30);
             }
             for (let b = 255; b >= 40; b -= 25) {
-                drawImage(star, 0, b);
+                drawPattern(star, 0, b);
                 basic.pause(30);
             }
         }
-        drawImage(star, 0, 255);
+        drawPattern(star, 0, 255);
     }
 
     function fireworks(): void {
@@ -259,7 +231,7 @@ namespace israel {
     export function playAnimation(animation: IsraelAnimation): void {
         switch (animation) {
             case IsraelAnimation.WavingFlag:
-                wave(symbolImage(IsraelSymbol.Flag), 30);
+                wave(symbolPattern(IsraelSymbol.Flag), 30);
                 showFlag();
                 break;
             case IsraelAnimation.FlagRaising: flagRaising(); break;
@@ -485,6 +457,22 @@ namespace israel {
     // Music
     // ---------------------------------------------------------------------
 
+    // Plays notes (0 = rest) with durations in beats. Each note is cut
+    // a little short so that repeated notes are heard separately.
+    function playNotes(notes: number[], beats: number[]): void {
+        const beat = music.beat(BeatFraction.Whole);
+        for (let i = 0; i < notes.length; i++) {
+            const ms = beats[i] * beat;
+            if (notes[i] == 0) {
+                music.rest(ms);
+            } else {
+                const gap = Math.min(60, Math.idiv(ms, 5));
+                music.playTone(notes[i], ms - gap);
+                music.rest(gap);
+            }
+        }
+    }
+
     /**
      * Play the opening of Hatikvah, the national anthem of Israel
      */
@@ -492,20 +480,47 @@ namespace israel {
     //% group="Music" weight=100
     export function playHatikvah(): void {
         // Kol od ba-le-vav pe-ni-ma, ne-fesh ye-hu-di ho-mi-ya
-        const notes = [
+        playNotes([
             Note.A, Note.B, Note.C5, Note.D5, Note.E5, Note.E5,
             Note.F5, Note.E5, Note.F5, Note.A5, Note.E5,
             Note.D5, Note.D5, Note.C5, Note.C5, Note.B, Note.A, Note.B, Note.C5, Note.A
-        ];
-        const beats = [
+        ], [
             1, 1, 1, 1, 2, 2,
             1, 1, 1, 1, 4,
             2, 1, 1, 2, 1, 1, 1, 1, 4
-        ];
-        const beat = music.beat(BeatFraction.Whole);
-        for (let i = 0; i < notes.length; i++) {
-            music.playTone(notes[i], beats[i] * beat);
-        }
+        ]);
+    }
+
+    /**
+     * Play "Am Yisrael Chai" by Shlomo Carlebach
+     */
+    //% blockId=israel_am_yisrael_chai block="play Am Yisrael Chai"
+    //% group="Music" weight=90
+    export function playAmYisraelChai(): void {
+        const e = 0.5; // eighth note
+        // Am Yis-ra-el chai, Am Yis-ra-el chai, Am Yis-ra-el, Am Yis-ra-el, Am Yis-ra-el chai
+        const partA: number[] = [Note.A, Note.A, Note.G, Note.E, Note.A,
+            Note.A, Note.A, Note.G, Note.E, Note.A,
+            Note.C5, Note.C5, Note.B, Note.A, Note.C5, Note.C5, Note.B, Note.A,
+            Note.D5, Note.D5, Note.B, Note.G];
+        const partABeats = [e, e, e, e, 2,
+            e, e, e, e, 2,
+            e, e, e, e, e, e, e, e,
+            e, e, e, e];
+        // Od a-vi-nu chai, od a-vi-nu chai, ...
+        const partB: number[] = [Note.E5, Note.E5, Note.E5, Note.E5, Note.E5, Note.E5, Note.E5, Note.E5,
+            Note.D5, Note.E5, Note.D5, Note.B, Note.G,
+            Note.D5, Note.D5, Note.D5, Note.D5, Note.D5, Note.D5, Note.D5, Note.D5,
+            Note.E5, Note.D5, Note.C5, Note.B];
+        const partBBeats = [e, e, e, e, e, e, e, e,
+            e, e, e, e, 2,
+            e, e, e, e, e, e, e, e,
+            e, e, e, e];
+        // each part is played twice, with a different ending the second time
+        playNotes(partA.concat([Note.A]), partABeats.concat([2]));
+        playNotes(partA.concat([Note.A, 0]), partABeats.concat([1, 1]));
+        playNotes(partB.concat([Note.A, 0]), partBBeats.concat([1, 1]));
+        playNotes(partB.concat([Note.A]), partBBeats.concat([2]));
     }
 
     // ---------------------------------------------------------------------

@@ -9,3 +9,7 @@ basic.showNumber(israel.israelAge(2026))
 input.onButtonPressed(Button.A, function () {
     israel.playHatikvah()
 })
+input.onButtonPressed(Button.B, function () {
+    israel.playAmYisraelChai()
+})
+israel.showSymbol(IsraelSymbol.Dreidel)
