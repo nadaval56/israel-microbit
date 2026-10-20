@@ -136,24 +136,48 @@ namespace israel {
     // ---------------------------------------------------------------------
 
     function starOfDavid(): void {
-        const up = "00900|09090|09090|99999|00000";
-        const down = "00000|99999|09090|09090|00900";
-        for (let i = 0; i < 2; i++) {
-            drawPattern(up, 0, 255);
-            basic.pause(300);
-            drawPattern(down, 0, 255);
-            basic.pause(300);
-        }
+        // the outline of the star, clockwise from the top point
+        const ringX = [2, 3, 4, 3, 4, 3, 2, 1, 0, 1, 0, 1];
+        const ringY = [0, 1, 1, 2, 3, 3, 4, 3, 3, 2, 1, 1];
         const star = symbolPattern(IsraelSymbol.StarOfDavid);
-        for (let i = 0; i < 2; i++) {
-            for (let b = 40; b <= 255; b += 25) {
-                drawPattern(star, 0, b);
-                basic.pause(30);
+        // build the star point by point
+        basic.clearScreen();
+        for (let i = 0; i < 12; i++) {
+            led.plotBrightness(ringX[i], ringY[i], 255);
+            basic.pause(70);
+        }
+        led.plotBrightness(2, 1, 255);
+        led.plotBrightness(2, 3, 255);
+        basic.pause(200);
+        // a bright light with a tail runs around the dim star
+        for (let t = 0; t < 24; t++) {
+            drawPattern(star, 0, 40);
+            led.plotBrightness(ringX[(t + 10) % 12], ringY[(t + 10) % 12], 90);
+            led.plotBrightness(ringX[(t + 11) % 12], ringY[(t + 11) % 12], 160);
+            led.plotBrightness(ringX[t % 12], ringY[t % 12], 255);
+            basic.pause(70);
+        }
+        // twinkle
+        for (let t = 0; t < 16; t++) {
+            drawPattern(star, 0, 70);
+            for (let k = 0; k < 3; k++) {
+                const i = randint(0, 11);
+                led.plotBrightness(ringX[i], ringY[i], 255);
             }
-            for (let b = 255; b >= 40; b -= 25) {
-                drawPattern(star, 0, b);
-                basic.pause(30);
-            }
+            basic.pause(90);
+        }
+        // pulse and stay lit
+        for (let b = 40; b <= 255; b += 25) {
+            drawPattern(star, 0, b);
+            basic.pause(30);
+        }
+        for (let b = 255; b >= 40; b -= 25) {
+            drawPattern(star, 0, b);
+            basic.pause(30);
+        }
+        for (let b = 40; b <= 255; b += 25) {
+            drawPattern(star, 0, b);
+            basic.pause(30);
         }
         drawPattern(star, 0, 255);
     }
