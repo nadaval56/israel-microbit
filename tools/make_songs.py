@@ -65,13 +65,13 @@ SONGS = [
         "E4:2 Fs4:2 G4:8 G4:4 Fs4:2 G4:2 A4:8 A4:4 G4:2 A4:2 B4:8 B4:4 A4:2 B4:2 C5:8 C5:4 C5:4 B4:8 "
         "B4:4 A4:4 B4:12 B4:4 Fs4:8 G4:4 A4:4 G4:12 Fs4:2 E4:2 Ds4:8 E4:4 Fs4:4 E4:8 E4:4 E4:4 C5:8 D5:4 "
         "C5:4 B4:8 A4:4 G4:4 Fs4:8 G4:4 Fs4:4 E4:12 "),
-    ("Vesamachta", 'Vesamachta Bechagecha (Sukkot)', 110, 1,
-        "Ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach (Chasidic)",
-        "Zemereshet score",
-        "D5:4 A4:4 As4:2 A4:6 D5:4 A4:4 As4:2 A4:6 D5:4 C5:4 As4:4 A4:4 G4:2 G4:2 As4:2 A4:2 G4:8 C5:4 "
-        "G4:4 A4:2 G4:6 C5:4 G4:4 A4:2 G4:6 C5:4 As4:4 A4:4 G4:4 F4:2 F4:2 A4:2 G4:2 F4:8 D5:4 A4:4 As4:2 "
-        "A4:6 D5:4 A4:4 As4:2 A4:6 D5:4 C5:4 As4:4 A4:4 G4:2 G4:2 As4:2 A4:2 G4:8 C5:4 G4:4 A4:2 G4:6 "
-        "C5:4 G4:4 A4:2 G4:6 C5:4 As4:4 A4:4 G4:4 F4:2 F4:2 A4:2 G4:2 F4:8 "),
+    ("Vesamachta", 'Vesamachta Bechagecha (Sukkot)', 160, 1,
+        "Ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach (D Hijaz, two passes)",
+        "transcription from the user's earlier Claude Code session",
+        "Fs4:4 G4:4 A4:4 As4:4 C5:2 As4:4 A4:2 A4:2 G4:2 G4:2 Fs4:2 A4:2 G4:2 G4:2 Fs4:2 Fs4:2 Ds4:2 "
+        "Ds4:2 D4:2 Fs4:12 R:4 "
+        "Fs4:4 G4:4 A4:4 As4:4 C5:2 As4:4 A4:2 A4:2 G4:2 G4:2 Fs4:2 A4:2 G4:2 G4:2 Fs4:2 Fs4:2 Ds4:2 "
+        "Ds4:2 D4:2 D4:12 R:4 "),
     ("UshavtemMayim", 'Ushavtem Mayim (Sukkot)', 100, 0,
         "U-sh'-av-tem ma-yim be-sa-son (Emanuel Amiran)",
         "Zemereshet score and UCI MIDI",

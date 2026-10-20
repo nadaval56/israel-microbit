@@ -105,8 +105,8 @@ namespace israel {
                 playNotes(";dGlBdCl@dCdBb@b?d@bBb;l;d@h@d@dBl@bBbChCdBbCbEhEdCbEbGhGdEbGbHhHdHdGhGdEdGlGdBhCdEdClBb@b?h@dBd@h@d@dHhJdHdGhEdCdBhCdBd@l", 84, 1, speed);
                 break;
             case IsraeliSong.Vesamachta:
-                // Ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach (Chasidic) (Zemereshet score)
-                playNotes("JdEdFbEfJdEdFbEfJdHdFdEdCbCbFbEbChHdCdEbCfHdCdEbCfHdFdEdCdAbAbEbCbAhJdEdFbEfJdEdFbEfJdHdFdEdCbCbFbEbChHdCdEbCfHdCdEbCfHdFdEdCdAbAbEbCbAh", 110, 1, speed);
+                // Ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach (D Hijaz, two passes) (transcription from the user's earlier Claude Code session)
+                playNotes("BdCdEdFdHbFdEbEbCbCbBbEbCbCbBbBb?b?b>bBl!dBdCdEdFdHbFdEbEbCbCbBbEbCbCbBbBb?b?b>b>l!d", 160, 1, speed);
                 break;
             case IsraeliSong.UshavtemMayim:
                 // U-sh'-av-tem ma-yim be-sa-son (Emanuel Amiran) (Zemereshet score and UCI MIDI)
