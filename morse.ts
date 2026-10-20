@@ -10,6 +10,20 @@ enum MorseOutput {
     Light
 }
 
+/**
+ * Morse signals that travel over the radio
+ */
+enum MorseSignal {
+    //% block="dot"
+    Dot,
+    //% block="dash"
+    Dash,
+    //% block="end of letter"
+    LetterEnd,
+    //% block="end of word"
+    WordEnd
+}
+
 namespace israel {
 
     // Hebrew Morse code for U+05D0 (alef) .. U+05EA (tav).
@@ -39,8 +53,9 @@ namespace israel {
 
     let unit = 120;
     let output = MorseOutput.SoundAndLight;
-    let receiving = false;
-    let incoming: number[] = [];
+    // received signals as text: dot, dash, end of letter, end of word
+    const signalText = [".", "-", " ", "/"];
+    let shownSign = 0;
 
     function charMorse(code: number): string {
         if (code >= 0x05D0 && code <= 0x05EA) return hebrewMorse[code - 0x05D0];
@@ -180,28 +195,66 @@ namespace israel {
     }
 
     /**
-     * Start receiving Morse code by radio. Received signals are played as beeps and
-     * flashes only, so the listeners decode the message themselves.
+     * Runs when a Morse signal arrives by radio. The signal is "." (dot), "-" (dash),
+     * " " (end of letter) or "/" (end of word).
      */
-    //% blockId=israel_morse_receive block="receive Morse by radio"
-    //% group="Morse" weight=65
-    export function receiveMorse(): void {
-        if (receiving) return;
-        receiving = true;
+    //% blockId=israel_on_morse block="on Morse signal received"
+    //% draggableParameters="reporter"
+    //% group="Morse" weight=68
+    export function onMorseReceived(handler: (signal: string) => void): void {
         radio.onReceivedValue(function (name: string, value: number) {
-            if (name == RADIO_KEY) incoming.push(value);
-        });
-        control.inBackground(function () {
-            while (true) {
-                if (incoming.length > 0) playSymbol(incoming.shift());
-                else basic.pause(20);
-            }
+            if (name == RADIO_KEY && value >= DOT && value <= WORD_END) handler(signalText[value - 1]);
         });
     }
 
     /**
-     * Send text as Morse code by radio. The sender only flashes the signs;
-     * the receiving micro:bit beeps and flashes them.
+     * A Morse signal as text, to compare with a received signal
+     * @param kind dot, dash, end of letter or end of word
+     */
+    //% blockId=israel_morse_signal block="Morse %kind"
+    //% group="Morse" weight=67
+    export function morseSignal(kind: MorseSignal): string {
+        return signalText[kind];
+    }
+
+    /**
+     * Flash a Morse signal on the LEDs: a small plus for a dot, a line for a dash.
+     * The program goes on while the sign is shown, so a sound can play at the same time.
+     * @param signal the signal, eg: "."
+     */
+    //% blockId=israel_show_morse_signal block="show Morse signal %signal"
+    //% signal.defl="."
+    //% group="Morse" weight=66
+    export function showMorseSignal(signal: string): void {
+        if (signal != "." && signal != "-") {
+            basic.clearScreen();
+            return;
+        }
+        const ms = signal == "." ? unit : 3 * unit;
+        drawSign(signal == "-");
+        shownSign++;
+        const sign = shownSign;
+        control.inBackground(function () {
+            basic.pause(ms);
+            if (sign == shownSign) basic.clearScreen();
+        });
+    }
+
+    /**
+     * Beep a Morse signal: short for a dot, long for a dash
+     * @param signal the signal, eg: "."
+     */
+    //% blockId=israel_play_morse_signal block="play Morse signal sound %signal"
+    //% signal.defl="."
+    //% group="Morse" weight=65
+    export function playMorseSignal(signal: string): void {
+        if (signal == ".") music.playTone(TONE, unit);
+        else if (signal == "-") music.playTone(TONE, 3 * unit);
+    }
+
+    /**
+     * Send text as Morse code by radio, one signal at a time. The sender only
+     * flashes the signs; the receivers decide what to do with each signal.
      * @param text the text to send, eg: "שלום"
      */
     //% blockId=israel_morse_send block="send Morse by radio %text"

@@ -14,7 +14,19 @@ israel.setMorseSpeed(100)
 israel.playMorse("שלום")
 basic.showString(israel.textToMorse("SOS"))
 israel.sendMorse("חג שמח")
-israel.receiveMorse()
+let code = ""
+israel.onMorseReceived(function (signal) {
+    israel.showMorseSignal(signal)
+    israel.playMorseSignal(signal)
+    if (signal == israel.morseSignal(MorseSignal.Dot) || signal == israel.morseSignal(MorseSignal.Dash)) {
+        code = "" + code + signal
+    } else if (signal == israel.morseSignal(MorseSignal.LetterEnd)) {
+        if (israel.textToMorse("ש") == code) {
+            israel.showHebrew("ש")
+        }
+        code = ""
+    }
+})
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
     israel.sendDot()
     israel.sendDash()
