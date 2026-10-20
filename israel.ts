@@ -422,8 +422,7 @@ namespace israel {
      * Turn Hebrew text into LED columns, ordered from left to right
      * as the text is seen (numbers stay left-to-right).
      */
-    //% blockHidden=true
-    export function hebrewColumns(text: string): number[] {
+    function hebrewColumns(text: string): number[] {
         const glyphs: string[] = [];
         const digit: boolean[] = [];
         for (let i = 0; i < text.length; i++) {

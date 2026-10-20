@@ -95,19 +95,6 @@ namespace israel {
         }
     }
 
-    // Shows a single Hebrew letter (or "?") in the middle of the screen
-    function showLetter(letter: string): void {
-        const cols = hebrewColumns(letter);
-        const width = cols.length - 1; // the last column is the gap after the letter
-        const left = Math.idiv(5 - width, 2);
-        basic.clearScreen();
-        for (let i = 0; i < width; i++) {
-            for (let y = 0; y < 5; y++) {
-                if (cols[i] & (1 << y)) led.plot(left + i, y);
-            }
-        }
-    }
-
     function decodeLetter(code: string): string {
         for (let i = 0; i < hebrewLetters.length; i++) {
             if (hebrewMorse[hebrewLetters.charCodeAt(i) - 0x05D0] == code) return hebrewLetters.charAt(i);
@@ -177,36 +164,6 @@ namespace israel {
         return parts.join(" ");
     }
 
-    /**
-     * Decode Morse code into Hebrew letters: letters separated by spaces, words by "/"
-     * @param code the Morse code, eg: "... .-.. . --"
-     */
-    //% blockId=israel_morse_to_text block="decode Morse %code"
-    //% code.defl="... .-.. . --"
-    //% group="Morse" weight=75
-    export function morseToText(code: string): string {
-        let text = "";
-        const parts = code.split(" ");
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            if (part.length == 0) continue;
-            if (part == "/") {
-                text = withFinalLetter(text) + " ";
-            } else {
-                text += decodeLetter(part);
-            }
-        }
-        return withFinalLetter(text);
-    }
-
-    // כ מ נ פ צ take their final form at the end of a word
-    function withFinalLetter(text: string): string {
-        if (text.length == 0) return text;
-        const i = "כמנפצ".indexOf(text.charAt(text.length - 1));
-        if (i < 0) return text;
-        return text.substr(0, text.length - 1) + "ךםןףץ".charAt(i);
-    }
-
     // ---------------------------------------------------------------------
     // Radio
     // ---------------------------------------------------------------------
@@ -262,39 +219,65 @@ namespace israel {
     }
 
     // ---------------------------------------------------------------------
-    // Telegraph
+    // Telegraph: building blocks for your own Morse key
     // ---------------------------------------------------------------------
 
+    let keyed = "";
+    let lastLetter = "";
+
+    function sendSign(symbol: number): void {
+        radio.sendValue(RADIO_KEY, symbol);
+        playSymbol(symbol);
+    }
+
     /**
-     * Turn the micro:bit into a telegraph key: button A sends a dot, B a dash,
-     * A+B ends a letter (and shows it), and shaking sends a space between words.
-     * It also plays the Morse code that other telegraphs send.
+     * Send a Morse dot by radio and play it here
      */
-    //% blockId=israel_morse_telegraph block="start Morse telegraph"
+    //% blockId=israel_morse_dot block="Morse: send dot"
     //% group="Morse" weight=55
-    export function startTelegraph(): void {
-        receiveMorse();
-        let current = "";
-        input.onButtonPressed(Button.A, function () {
-            current += ".";
-            radio.sendValue(RADIO_KEY, DOT);
-            playSymbol(DOT);
-        });
-        input.onButtonPressed(Button.B, function () {
-            current += "-";
-            radio.sendValue(RADIO_KEY, DASH);
-            playSymbol(DASH);
-        });
-        input.onButtonPressed(Button.AB, function () {
-            if (current.length == 0) return;
-            radio.sendValue(RADIO_KEY, LETTER_END);
-            showLetter(decodeLetter(current));
-            current = "";
-            basic.pause(4 * unit);
-            basic.clearScreen();
-        });
-        input.onGesture(Gesture.Shake, function () {
-            radio.sendValue(RADIO_KEY, WORD_END);
-        });
+    export function sendDot(): void {
+        keyed += ".";
+        sendSign(DOT);
+    }
+
+    /**
+     * Send a Morse dash by radio and play it here
+     */
+    //% blockId=israel_morse_dash block="Morse: send dash"
+    //% group="Morse" weight=54
+    export function sendDash(): void {
+        keyed += "-";
+        sendSign(DASH);
+    }
+
+    /**
+     * End the letter made of the dots and dashes sent so far
+     */
+    //% blockId=israel_morse_end_letter block="Morse: end letter"
+    //% group="Morse" weight=53
+    export function endLetter(): void {
+        if (keyed.length == 0) return;
+        lastLetter = decodeLetter(keyed);
+        keyed = "";
+        sendSign(LETTER_END);
+    }
+
+    /**
+     * End the word: the next letter starts a new word
+     */
+    //% blockId=israel_morse_end_word block="Morse: end word"
+    //% group="Morse" weight=52
+    export function endWord(): void {
+        if (keyed.length > 0) endLetter();
+        sendSign(WORD_END);
+    }
+
+    /**
+     * The Hebrew letter that was sent last with "end letter" ("?" if the code is not a letter)
+     */
+    //% blockId=israel_morse_last_letter block="last letter sent in Morse"
+    //% group="Morse" weight=51
+    export function lastLetterSent(): string {
+        return lastLetter;
     }
 }
