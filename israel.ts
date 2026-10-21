@@ -395,6 +395,17 @@ namespace israel {
         "#.#|#.#|...|...|..."
     ];
 
+    /**
+     * The character code at a position, with Hebrew restored. On the micro:bit
+     * itself, text is stored one byte per character, so Hebrew (U+0590..U+05FF)
+     * arrives as 0x90..0xFF. The simulator keeps the full code.
+     */
+    //% blockHidden=true
+    export function hebrewCharCode(text: string, i: number): number {
+        const code = text.charCodeAt(i);
+        return code >= 0x90 && code <= 0xFF ? code + 0x0500 : code;
+    }
+
     function glyphFor(code: number): string {
         if (code >= 0x05D0 && code <= 0x05EA) return hebrewGlyphs[code - 0x05D0];
         if (code >= 48 && code <= 57) return digitGlyphs[code - 48];
@@ -426,7 +437,7 @@ namespace israel {
         const glyphs: string[] = [];
         const digit: boolean[] = [];
         for (let i = 0; i < text.length; i++) {
-            const code = text.charCodeAt(i);
+            const code = hebrewCharCode(text, i);
             const g = glyphFor(code);
             // niqqud and unknown characters are skipped
             if (g) {

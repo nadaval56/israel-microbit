@@ -68,7 +68,7 @@ namespace israel {
     function textToSymbols(text: string): number[] {
         const symbols: number[] = [];
         for (let i = 0; i < text.length; i++) {
-            const code = text.charCodeAt(i);
+            const code = hebrewCharCode(text, i);
             if (code == 32) {
                 if (symbols.length > 0 && symbols[symbols.length - 1] == LETTER_END) symbols.push(WORD_END);
                 continue;
@@ -112,7 +112,7 @@ namespace israel {
 
     function decodeLetter(code: string): string {
         for (let i = 0; i < hebrewLetters.length; i++) {
-            if (hebrewMorse[hebrewLetters.charCodeAt(i) - 0x05D0] == code) return hebrewLetters.charAt(i);
+            if (hebrewMorse[hebrewCharCode(hebrewLetters, i) - 0x05D0] == code) return hebrewLetters.charAt(i);
         }
         for (let d = 0; d < 10; d++) {
             if (digitMorse[d] == code) return String.fromCharCode(48 + d);
@@ -167,7 +167,7 @@ namespace israel {
     export function textToMorse(text: string): string {
         const parts: string[] = [];
         for (let i = 0; i < text.length; i++) {
-            const code = text.charCodeAt(i);
+            const code = hebrewCharCode(text, i);
             if (code == 32) {
                 if (parts.length > 0 && parts[parts.length - 1] != "/") parts.push("/");
                 continue;
