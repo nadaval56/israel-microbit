@@ -1,0 +1,28 @@
+# Creates a GitHub release for the version in pxt.json, so MakeCode offers it.
+# Runs on every push to main and does nothing when that version already has a release.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create the release if it is new
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="v$(jq -r .version pxt.json)"
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "$tag already has a release"
+          else
+            gh release create "$tag" --target "$GITHUB_SHA" --title "$tag" --generate-notes
+            echo "Created release $tag"
+          fi
