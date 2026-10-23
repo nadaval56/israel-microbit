@@ -75,7 +75,7 @@ for (let night = 0; night <= 7; night++) {
 בדוגמה, הלולאה גוללת את כל שמונת לילות החנוכה ברצף (הלולאה סופרת מ-0 עד 7, ולכן הלילה הוא המספר ועוד 1).
 
 ### מוזיקה
-<img src="docs/images/music.png" alt="music" width="672">
+<img src="docs/images/music.png" alt="music" width="923">
 
 <details><summary>הצג קוד</summary>
 
@@ -86,7 +86,7 @@ input.onButtonPressed(Button.A, function () {
 })
 input.onButtonPressed(Button.B, function () {
     israel.showSymbol(IsraelSymbol.Dreidel)
-    israel.playSong(IsraeliSong.MaozTzur, 150)
+    israel.playSong(IsraeliSong.MaozTzur, music.PlaybackMode.UntilDone, 150)
 })
 ```
 
@@ -112,6 +112,29 @@ input.onButtonPressed(Button.B, function () {
 המנגינות מתנגנות ברמקול של המיקרוביט, או ברמקול שמחובר לפין 0. בין התווים יש הפסקה קצרה, כך שתווים זהים ברצף נשמעים בנפרד.
 כל שיר מתנגן בקצב הטבעי שלו. בלחיצה על "+" בבלוק אפשר לבחור מהירות באחוזים: 100 רגיל, 50 חצי מהירות, 200 כפול.
 בלוק "קבע קצב" (tempo) של MakeCode משנה את המהירות של כל השירים יחד: 120 הוא הקצב הרגיל.
+
+**מנגנים ומציגים בו זמנית.** כמו בבלוקי המוזיקה של MakeCode, בוחרים בבלוק איך לנגן:
+* **עד הסוף** – התוכנית מחכה שהשיר ייגמר, ורק אז ממשיכה לבלוק הבא.
+* **ברקע** – השיר מתחיל, והתוכנית ממשיכה מיד. כך אפשר להציג טקסט או אנימציה בזמן שהשיר מתנגן.
+* **ברקע בלולאה** – השיר חוזר שוב ושוב, עד ש"עצור את כל הצלילים" או עד ששיר אחר מתחיל.
+<img src="docs/images/music-background.png" alt="music-background" width="664">
+
+<details><summary>הצג קוד</summary>
+
+```blocks
+input.onButtonPressed(Button.A, function () {
+    israel.playSong(IsraeliSong.Sevivon, music.PlaybackMode.InBackground)
+    israel.showHebrew("חנוכה שמח")
+    israel.scrollHanukkiah(8)
+})
+input.onButtonPressed(Button.B, function () {
+    music.stopAllSounds()
+})
+```
+
+</details>
+
+כשמתחיל שיר חדש, השיר הקודם נעצר.
 
 המנגינות שמורות בקובץ `songs.ts`, שנוצר מהגרסה הקריאה שלהן ב-`tools/make_songs.py` (שתי אותיות לכל תו, כדי שהכל ייכנס גם במיקרוביט V1).
 
@@ -390,7 +413,7 @@ basic.showNumber(israel.israelAge(2026))
 מחזיר את גיל מדינת ישראל בשנה שבוחרים.
 
 ## דוגמה: יום העצמאות
-<img src="docs/images/independence-day.png" alt="independence-day" width="599">
+<img src="docs/images/independence-day.png" alt="independence-day" width="651">
 
 <details><summary>הצג קוד</summary>
 

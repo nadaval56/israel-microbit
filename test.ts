@@ -47,3 +47,10 @@ input.onButtonPressed(Button.AB, function () {
     israel.sendHebrewText("שלום לכולם")
     israel.sendAnimation(IsraelAnimation.Fireworks)
 })
+
+// songs in the background while the screen shows text
+input.onGesture(Gesture.Shake, function () {
+    israel.playSong(IsraeliSong.Sevivon, music.PlaybackMode.LoopingInBackground)
+    israel.showHebrew("חנוכה שמח")
+    israel.playHatikvah(music.PlaybackMode.InBackground)
+})

@@ -38,10 +38,11 @@ namespace israel {
     // the speed in percent and by the MakeCode tempo block (120 = natural speed), and
     // can be raised by octaves, which the speaker plays louder. Each note is cut a
     // little short so that repeated notes are heard separately.
-    function playNotes(notes: string, bpm: number, octaveUp: number, speed: number): void {
+    // The song stops between notes when another song starts or on "stop all sounds".
+    function playNotes(notes: string, bpm: number, octaveUp: number, speed: number, run: number): void {
         speed = Math.max(10, Math.min(400, speed));
         const sixteenth = Math.idiv(180000000, bpm * music.tempo() * speed);
-        for (let i = 0; i + 1 < notes.length; i += 2) {
+        for (let i = 0; i + 1 < notes.length && run == songRun; i += 2) {
             const midi = notes.charCodeAt(i);
             const ms = (notes.charCodeAt(i + 1) - 96) * sixteenth;
             if (midi == 33) {
@@ -56,73 +57,104 @@ namespace israel {
         }
     }
 
+    // counts the songs started, so that a newer song stops an older one
+    let songRun = 0;
+    let stopHooked = false;
+
+    function startSong(notes: string, bpm: number, octaveUp: number, speed: number, mode: music.PlaybackMode): void {
+        // programs written before the play mode existed pass the speed in its place
+        if (mode > music.PlaybackMode.LoopingInBackground) {
+            speed = mode;
+            mode = music.PlaybackMode.UntilDone;
+        }
+        if (!stopHooked) {
+            stopHooked = true;
+            music._onStopSound(function () { songRun++; });
+        }
+        songRun++;
+        const run = songRun;
+        if (mode == music.PlaybackMode.UntilDone) {
+            playNotes(notes, bpm, octaveUp, speed, run);
+            return;
+        }
+        control.inBackground(function () {
+            do {
+                playNotes(notes, bpm, octaveUp, speed, run);
+            } while (mode == music.PlaybackMode.LoopingInBackground && run == songRun);
+        });
+    }
+
     /**
      * Play Hatikvah, the national anthem of Israel
+     * @param mode play until done, in the background or looping in the background
      * @param speed speed in percent, 100 is the natural speed, eg: 100
      */
-    //% blockId=israel_hatikvah block="play Hatikvah||at speed %speed percent"
+    //% blockId=israel_hatikvah block="play Hatikvah %mode||at speed %speed percent"
+    //% mode.defl=music.PlaybackMode.UntilDone
     //% speed.defl=100 speed.min=25 speed.max=300
     //% expandableArgumentMode="toggle"
     //% group="Music" weight=100
-    export function playHatikvah(speed: number = 100): void {
+    export function playHatikvah(mode: music.PlaybackMode = music.PlaybackMode.UntilDone, speed: number = 100): void {
         // Kol od ba-le-vav pe-ni-ma ... e-retz tzi-yon vi-ru-sha-la-yim (FluteTunes score)
-        playNotes("JbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJfEbJbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJhJdVdVdVdTbVbTbRbQhJdVdVdVdTbVbTbRbQhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJh", 72, 0, speed);
+        startSong("JbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJfEbJbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJhJdVdVdVdTbVbTbRbQhJdVdVdVdTbVbTbRbQhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJh", 72, 0, speed, mode);
     }
 
     /**
      * Play an Israeli song or a holiday song
      * @param song the song to play
+     * @param mode play until done, in the background or looping in the background
      * @param speed speed in percent, 100 is the natural speed, eg: 100
      */
-    //% blockId=israel_play_song block="play song %song||at speed %speed percent"
+    //% blockId=israel_play_song block="play song %song %mode||at speed %speed percent"
+    //% mode.defl=music.PlaybackMode.UntilDone
     //% speed.defl=100 speed.min=25 speed.max=300
     //% expandableArgumentMode="toggle"
     //% group="Music" weight=90
-    export function playSong(song: IsraeliSong, speed: number = 100): void {
+    export function playSong(song: IsraeliSong, mode: music.PlaybackMode = music.PlaybackMode.UntilDone, speed: number = 100): void {
         switch (song) {
             case IsraeliSong.AmYisraelChai:
                 // Am Yis-ra-el chai, od a-vi-nu chai (Shlomo Carlebach) (jewisheetmusic.com note-name score)
-                playNotes("EbEbCb@bEhEbEbCb@bEhHbHbGbEbHbHbGbEbJbJbGbCbEhEbEbCb@bEhEbEbCb@bEhHbHbGbEbHbHbGbEbJbJbGbCbEd!dLbLbLbLbLbLbLbLbJbLbJbGbChJbJbJbJbJbJbJbJbLbJbHbGbEd!dLbLbLbLbLbLbLbLbJbLbJbGbChJbJbJbJbJbJbJbJbLbJbHbGbEh", 120, 0, speed);
+                startSong("EbEbCb@bEhEbEbCb@bEhHbHbGbEbHbHbGbEbJbJbGbCbEhEbEbCb@bEhEbEbCb@bEhHbHbGbEbHbHbGbEbJbJbGbCbEd!dLbLbLbLbLbLbLbLbJbLbJbGbChJbJbJbJbJbJbJbJbLbJbHbGbEd!dLbLbLbLbLbLbLbLbJbLbJbGbChJbJbJbJbJbJbJbJbLbJbHbGbEh", 120, 0, speed, mode);
                 break;
             case IsraeliSong.Sevivon:
                 // Se-vi-von, sov sov sov, Cha-nu-ka hu chag tov (FluteTunes score)
-                playNotes("JbJbLdMbMbLdQbQbOaMaLaJaMbMbLdJbJbLdMbMbOdQbQbQbEbJbJbJdObObObRbQbQbMaLaJbIbIbEbIbJcLaMaLaJbObObObRbQdMaLaJbIbIbEbIbJbJbJd", 84, 0, speed);
+                startSong("JbJbLdMbMbLdQbQbOaMaLaJaMbMbLdJbJbLdMbMbOdQbQbQbEbJbJbJdObObObRbQbQbMaLaJbIbIbEbIbJcLaMaLaJbObObObRbQdMaLaJbIbIbEbIbJbJbJd", 84, 0, speed, mode);
                 break;
             case IsraeliSong.MaozTzur:
                 // Ma-oz tzur ye-shu-a-ti (traditional melody) (Zemereshet score)
-                playNotes("Ad<dAdFdEdCdAd!dHdJdCdEbFbEdCdAd!dAd<dAdFdEdCdAd!dHdJdCdEbFbEdCdAd!bHbHfHbJdLdMhHhMdLdJdHdHbFbEbFbCd!dEfFbHd!bHbCfEbFd!dEdAdJdHbFbEdFdHd!dEfFbHd!bHbCfEbFd!dEdAdJdHbFbEdCdAh", 92, 1, speed);
+                startSong("Ad<dAdFdEdCdAd!dHdJdCdEbFbEdCdAd!dAd<dAdFdEdCdAd!dHdJdCdEbFbEdCdAd!bHbHfHbJdLdMhHhMdLdJdHdHbFbEbFbCd!dEfFbHd!bHbCfEbFd!dEdAdJdHbFbEdFdHd!dEfFbHd!bHbCfEbFd!dEdAdJdHbFbEdCdAh", 92, 1, speed, mode);
                 break;
             case IsraeliSong.ChagPurim:
                 // Chag Pu-rim, chag Pu-rim, chag ga-dol hu la-ye-hu-dim (UCI MIDI performance)
-                playNotes("MbObMdMbObMdMbObMbObMbLbJdJbObOdJbObOdJbObMbLbMhQbQaQaObMbObObOdObOaOaMbJbMbMbMdQbQaQaObMbObObOdJbObMbLbJh", 100, 0, speed);
+                startSong("MbObMdMbObMdMbObMbObMbLbJdJbObOdJbObOdJbObMbLbMhQbQaQaObMbObObOdObOaOaMbJbMbMbMdQbQaQaObMbObObOdJbObMbLbJh", 100, 0, speed, mode);
                 break;
             case IsraeliSong.Dayenu:
                 // I-lu ho-tzi-a-nu mi-mitz-ra-yim, da-ye-nu (FluteTunes score)
-                playNotes("GbJbJbJbJbLbJbHbGbJbJbJbJbLbJbHbGbJbEbHbGbJbEbHbGdEdCd!dGdGdJbHdEbHdHdLbJdGbJdJdObNdNbNbJbLbNbObJbGbCbGdGdJbHdEbHdHdLbJdGbJdJdObNdNbNbJbLbNbOh", 100, 0, speed);
+                startSong("GbJbJbJbJbLbJbHbGbJbJbJbJbLbJbHbGbJbEbHbGbJbEbHbGdEdCd!dGdGdJbHdEbHdHdLbJdGbJdJdObNdNbNbJbLbNbObJbGbCbGdGdJbHdEbHdHdLbJdGbJdJdObNdNbNbJbLbNbOh", 100, 0, speed, mode);
                 break;
             case IsraeliSong.EliEli:
                 // E-li, E-li, she-lo yi-ga-mer le-o-lam (David Zehavi) (Zemereshet score)
-                playNotes(";dGlBdCl@dCdBb@b?d@bBb;l;d@h@d@dBl@bBbChCdBbCbEhEdCbEbGhGdEbGbHhHdHdGhGdEdGlGdBhCdEdClBb@b?h@dBd@h@d@dHhJdHdGhEdCdBhCdBd@l", 84, 1, speed);
+                startSong(";dGlBdCl@dCdBb@b?d@bBb;l;d@h@d@dBl@bBbChCdBbCbEhEdCbEbGhGdEbGbHhHdHdGhGdEdGlGdBhCdEdClBb@b?h@dBd@h@d@dHhJdHdGhEdCdBhCdBd@l", 84, 1, speed, mode);
                 break;
             case IsraeliSong.Vesamachta:
                 // Ve-sa-mach-ta be-cha-ge-cha, ve-ha-yi-ta ach sa-me-ach (D Hijaz, two passes) (transcription from the user's earlier Claude Code session)
-                playNotes("BdCdEdFdHbFdEbEbCbCbBbEbCbCbBbBb?b?b>bBl!dBdCdEdFdHbFdEbEbCbCbBbEbCbCbBbBb?b?b>b>l!d", 160, 1, speed);
+                startSong("BdCdEdFdHbFdEbEbCbCbBbEbCbCbBbBb?b?b>bBl!dBdCdEdFdHbFdEbEbCbCbBbEbCbCbBbBb?b?b>b>l!d", 160, 1, speed, mode);
                 break;
             case IsraeliSong.UshavtemMayim:
                 // U-sh'-av-tem ma-yim be-sa-son (Emanuel Amiran) (Zemereshet score and UCI MIDI)
-                playNotes("JaJaJbLbMaLaJbMbObQcOaMbQbTbRbQbObQbJaJaJbLbMaLaJbMbObQdVbVbTbTbQbTbVdVbVbVbVbVbVbVbVb!bVbTbTbQbTbVdVbVbVbVbVbVbVbVb!bVbTbTbQbObQdTdTdTdTdTbTbRaQaObTbTbRaQaObMbObQaRaQbObMbTdTbTbRaQaObTbTbRaQaObQbQbMaLaJbMbLbJd", 100, 0, speed);
+                startSong("JaJaJbLbMaLaJbMbObQcOaMbQbTbRbQbObQbJaJaJbLbMaLaJbMbObQdVbVbTbTbQbTbVdVbVbVbVbVbVbVbVb!bVbTbTbQbTbVdVbVbVbVbVbVbVbVb!bVbTbTbQbObQdTdTdTdTdTbTbRaQaObTbTbRaQaObMbObQaRaQbObMbTdTbTbRaQaObTbTbRaQaObQbQbMaLaJbMbLbJd", 100, 0, speed, mode);
                 break;
             case IsraeliSong.BarYochai:
                 // Bar Yo-chai, nim-shach-ta ash-re-cha (playjewishmusic.com lead sheet)
-                playNotes("AfCbAf>bCdCbCbAb@b>d!b@dCbCbAbAdAb@b>b@bAdAdAfCbCfCbEbFbEbCbAb@b>d!bEdEbEd>d>b<b;b<b>d>dCfCbAb@b>dCbCbCbCbAb@b>d!b@dCbCbAbAdAb@b>b@bAdAdAfCbCfCbEbFbEbCbAb@b>d!bEdEbEd>d>b<b;b<b>d>d", 108, 1, speed);
+                startSong("AfCbAf>bCdCbCbAb@b>d!b@dCbCbAbAdAb@b>b@bAdAdAfCbCfCbEbFbEbCbAb@b>d!bEdEbEd>d>b<b;b<b>d>dCfCbAb@b>dCbCbCbCbAb@b>d!b@dCbCbAbAdAb@b>b@bAdAdAfCbCfCbEbFbEbCbAb@b>d!bEdEbEd>d>b<b;b<b>d>d", 108, 1, speed, mode);
                 break;
             case IsraeliSong.Salenu:
                 // Sa-le-nu al ke-te-fe-nu (Yedidia Admon) (Zemereshet score)
-                playNotes("<bCd@bAb@b>b<b>bAd@b>b<b@d<bCd@bAb@b>b<b>bAd@b>b<b<dCdCdChFbEbCbAb@bAbCdCb!bCb!bCb!bCb!bFbEbCbAaAa@bAbCd<bAbAbAbAd@b>b<b@b@b@b@d>b<bCb!b@b!bAb@b>d<bAb@b>bChCb!b@b!bAb@b>d<bAb@b>b<h", 100, 1, speed);
+                startSong("<bCd@bAb@b>b<b>bAd@b>b<b@d<bCd@bAb@b>b<b>bAd@b>b<b<dCdCdChFbEbCbAb@bAbCdCb!bCb!bCb!bCb!bFbEbCbAaAa@bAbCd<bAbAbAbAd@b>b<b@b@b@b@d>b<bCb!b@b!bAb@b>d<bAb@b>bChCb!b@b!bAb@b>d<bAb@b>b<h", 100, 1, speed, mode);
                 break;
             case IsraeliSong.ShiratHaasavim:
                 // Da le-cha she-kol ro-e ve-ro-e (Naomi Shemer) (Ministry of Education songbook)
-                playNotes("@c>a>f;b>b@bBb@a@a@lCbBaCaBb@aBa@f;a;a;p@c>a>h>b@bBb@a@aBb@jCbBaCaBb@aBaEb>d>a>aGjGbEbCbBc@a>b=b;f;a;a@c;a@j;a;a;p@b>a>a>f;b>b@bBb@a@a@lCbBaCaBb@aBa@f;a;a;p@c>a>f;b>b@bBb@a@a@lCbBaCaBb@aBa@d>b>bGjGbEbCbBc@a>b=b;f;a;a@c;a@j;a;a;p", 80, 1, speed);
+                startSong("@c>a>f;b>b@bBb@a@a@lCbBaCaBb@aBa@f;a;a;p@c>a>h>b@bBb@a@aBb@jCbBaCaBb@aBaEb>d>a>aGjGbEbCbBc@a>b=b;f;a;a@c;a@j;a;a;p@b>a>a>f;b>b@bBb@a@a@lCbBaCaBb@aBa@f;a;a;p@c>a>f;b>b@bBb@a@a@lCbBaCaBb@aBa@d>b>bGjGbEbCbBc@a>b=b;f;a;a@c;a@j;a;a;p", 80, 1, speed, mode);
                 break;
         }
     }
