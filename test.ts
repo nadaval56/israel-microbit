@@ -50,7 +50,7 @@ input.onButtonPressed(Button.AB, function () {
 
 // songs in the background while the screen shows text
 input.onGesture(Gesture.Shake, function () {
-    israel.playSong(IsraeliSong.Sevivon, music.PlaybackMode.LoopingInBackground)
+    israel.playSong(IsraeliSong.Sevivon, SongPlayMode.LoopingInBackground)
     israel.showHebrew("חנוכה שמח")
-    israel.playHatikvah(music.PlaybackMode.InBackground)
+    israel.playHatikvah(SongPlayMode.InBackground)
 })
