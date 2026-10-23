@@ -1,7 +1,7 @@
 # 🇮🇱 ישראל – בלוקים ישראליים למיקרוביט
 
-הרחבה ל-[MakeCode](https://makecode.microbit.org) עם בלוקים בכחול-לבן: מגן דוד וסמלים,
-טקסט בעברית על מסך הלדים, "התקווה", שירי חגים ואנימציות.
+הרחבה ל-[MakeCode](https://makecode.microbit.org) עם בלוקים בכחול-לבן: מגן דוד וסמלים, תמונות נגללות,
+טקסט בעברית על מסך הלדים, "התקווה" ושירי חגים, אנימציות ומורס עברי.
 
 ## איך מוסיפים את ההרחבה
 
@@ -11,43 +11,74 @@
 4. בארגז הכלים תופיע קטגוריה כחולה חדשה בשם **ישראל** (Israel)
 
 > כשממשק MakeCode מוגדר לעברית, שמות הבלוקים מופיעים בעברית. בממשק באנגלית הם מופיעים באנגלית.
+> התמונות בעמוד הזה צולמו מ-MakeCode בעברית. מתחת לכל תמונה אפשר לפתוח את הקוד ולהדביק אותו בעורך ה-JavaScript.
 
 ## הבלוקים
 
+### עברית על מסך הלדים
+<img src="docs/images/hebrew.png" alt="hebrew" width="336">
+
+<details><summary>הצג קוד</summary>
+
+```blocks
+israel.showHebrew("שלום כיתה ד'")
+israel.showGreeting(HebrewGreeting.AmIsraelChai)
+```
+
+</details>
+
+למיקרוביט אין גופן עברי, ולכן ההרחבה כוללת גופן עברי משלה בגודל 5×5 – כל 22 האותיות וגם האותיות הסופיות.
+הטקסט נגלל בכיוון הקריאה העברי: הוא נכנס מצד שמאל וזז ימינה, כך שהאות הראשונה מופיעה ראשונה.
+נתמכים גם ספרות (שנשארות משמאל לימין, למשל "2026"), רווח, וסימני הפיסוק `! ? . , - : ' "`. ניקוד ותווים אחרים מדולגים.
+בלחיצה על "+" בבלוק אפשר לשנות את מהירות הגלילה.
+
+ברכות מוכנות: שלום, ישראל, עם ישראל חי, חג עצמאות שמח, חג שמח, שבת שלום, שנה טובה, ירושלים, מזל טוב, תודה רבה.
+
 ### סמלים
+<img src="docs/images/symbols.png" alt="symbols" width="160">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 israel.showSymbol(IsraelSymbol.StarOfDavid)
 ```
+
+</details>
+
 סמלים זמינים: מגן דוד, סביבון, ספר תורה.
 הסמלים משתמשים בעוצמות אור שונות: הצורה עצמה בהירה, ופרטי רקע עמומים יותר.
 הבלוק `תמונה של` מחזיר את הסמל כתמונה, לשימוש עם בלוקי התמונות של MakeCode.
 
-### אנימציות
+### אנימציות ותמונות נגללות
+<img src="docs/images/animations.png" alt="animations" width="462">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
+israel.setAnimationSpeed(150)
 israel.playAnimation(IsraelAnimation.StarOfDavid)
-israel.playAnimation(IsraelAnimation.Fireworks)
-israel.lightHanukkiah(3)
 israel.scrollPicture(IsraelPicture.Menorah)
-israel.scrollHanukkiah(5)
+for (let night = 0; night <= 7; night++) {
+    israel.scrollHanukkiah(night + 1)
+}
 ```
-* **מגן דוד** – הכוכב נבנה נורה אחר נורה, אור עם זנב רץ סביבו, הוא מנצנץ ובסוף פועם
-* **זיקוקי יום העצמאות** – זיקוקים שמתפוצצים ונגמרים במגן דוד
+
+</details>
+
+* **קבע קצב אנימציה ל- ... אחוז** – משפיע על כל האנימציות שבאות אחריו: 100 רגיל, 50 חצי מהירות, 200 כפול
+* **הפעל אנימציה [מגן דוד]** – הכוכב נבנה נורה אחר נורה, אור עם זנב רץ סביבו, הוא מנצנץ ובסוף פועם
+* **הפעל אנימציה [זיקוקי יום העצמאות]** – זיקוקים שמתפוצצים ונגמרים במגן דוד
 * **גלול תמונה** – תמונה רחבה שנגללת על המסך: חנוכייה (8 נרות ושמש), מנורת 7 קנים, דגל ישראל, ירושלים
 * **גלול חנוכייה ללילה...** – חנוכייה נגללת שבה דולקים רק הנרות של אותו לילה, מימין לשמאל
 * **הדלק נרות חנוכה ללילה...** – השמש נדלק, אחריו הנרות אחד אחד, עם להבות מהבהבות
 
-### עברית על מסך הלדים
-```blocks
-israel.showHebrew("שלום")
-israel.showGreeting(HebrewGreeting.AmIsraelChai)
-```
-למיקרוביט אין גופן עברי, ולכן ההרחבה כוללת גופן עברי משלה בגודל 5×5 – כל 22 האותיות וגם האותיות הסופיות.
-הטקסט נגלל בכיוון הקריאה העברי: הוא נכנס מצד שמאל וזז ימינה, כך שהאות הראשונה מופיעה ראשונה.
-נתמכים גם ספרות (שנשארות משמאל לימין, למשל "2026"), רווח, וסימני הפיסוק `! ? . , - : ' "`. ניקוד ותווים אחרים מדולגים.
-
-ברכות מוכנות: שלום, ישראל, עם ישראל חי, חג עצמאות שמח, חג שמח, שבת שלום, שנה טובה, ירושלים, מזל טוב, תודה רבה.
+בדוגמה, הלולאה גוללת את כל שמונת לילות החנוכה ברצף (הלולאה סופרת מ-0 עד 7, ולכן הלילה הוא המספר ועוד 1).
 
 ### מוזיקה
+<img src="docs/images/music.png" alt="music" width="672">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 input.onButtonPressed(Button.A, function () {
     israel.showSymbol(IsraelSymbol.StarOfDavid)
@@ -55,9 +86,12 @@ input.onButtonPressed(Button.A, function () {
 })
 input.onButtonPressed(Button.B, function () {
     israel.showSymbol(IsraelSymbol.Dreidel)
-    israel.playSong(IsraeliSong.Sevivon)
+    israel.playSong(IsraeliSong.MaozTzur, 150)
 })
 ```
+
+</details>
+
 * **נגן את התקווה** – ההמנון המלא
 * **נגן שיר** – בוחרים שיר מהרשימה:
 
@@ -75,33 +109,49 @@ input.onButtonPressed(Button.B, function () {
 | שירת העשבים (נעמי שמר) | כל השנה |
 | אלי אלי – הליכה לקיסריה | יום הזיכרון |
 
-המנגינות שמורות בקובץ `songs.ts`, שנוצר מהגרסה הקריאה שלהן ב-`tools/make_songs.py` (שתי אותיות לכל תו, כדי שהכל ייכנס גם במיקרוביט V1).
 המנגינות מתנגנות ברמקול של המיקרוביט, או ברמקול שמחובר לפין 0. בין התווים יש הפסקה קצרה, כך שתווים זהים ברצף נשמעים בנפרד.
-כל שיר מתנגן בקצב הטבעי שלו. בלחיצה על "+" בבלוק אפשר לבחור מהירות באחוזים: 100 רגיל, 50 חצי מהירות, 200 כפול. בלוק "קבע קצב" (tempo) של MakeCode משנה את המהירות: 120 הוא הקצב הרגיל, מספר גדול יותר מאיץ ומספר קטן יותר מאט.
+כל שיר מתנגן בקצב הטבעי שלו. בלחיצה על "+" בבלוק אפשר לבחור מהירות באחוזים: 100 רגיל, 50 חצי מהירות, 200 כפול.
+בלוק "קבע קצב" (tempo) של MakeCode משנה את המהירות של כל השירים יחד: 120 הוא הקצב הרגיל.
+
+המנגינות שמורות בקובץ `songs.ts`, שנוצר מהגרסה הקריאה שלהן ב-`tools/make_songs.py` (שתי אותיות לכל תו, כדי שהכל ייכנס גם במיקרוביט V1).
 
 ### מורס עברי
 לכל אות עברית יש קוד מורס משלה (א `·–`, ב `–···`, ש `···`, ת `–` ...). האותיות הסופיות מקבלות את הקוד של האות הרגילה.
 נקודה היא צפצוף קצר, קו ארוך פי שלושה, ויש הפסקות קבועות בין אותיות ובין מילים.
 
-**1. המיקרוביט כמצפין**
+#### 1. המיקרוביט כמצפין
+<img src="docs/images/morse-encoder.png" alt="morse-encoder" width="345">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 israel.setMorseSpeed(120)
 israel.setMorseOutput(MorseOutput.SoundAndLight)
-israel.playMorse("שלום")
+israel.playMorse("עם ישראל חי")
 ```
-* **נגן מורס** – הטקסט לא מוצג; במקומו יוצאים צפצופים, ובמסך מהבהבת נקודה (`+` קטן) או קו.
+
+</details>
+
+* **נגן מורס** – טקסט חופשי (מילה, כמה מילים או משפט שלם) לא מוצג; במקומו יוצאים צפצופים, ובמסך מהבהבת נקודה (`+` קטן) או קו.
 * **קבע אורך נקודה** – מהירות המורס. **נגן מורס עם** – צליל, אור או שניהם.
 * **קוד מורס של** – מחזיר מחרוזת כמו `... .-.. . --` (רווח בין אותיות, `/` בין מילים).
 
-**2. שליחה ברדיו** (שני מיקרוביטים באותה קבוצת רדיו, עם ההרחבה בשניהם)
+#### 2. שליחה ברדיו
+שני מיקרוביטים באותה קבוצת רדיו, עם ההרחבה בשניהם. בסימולטור של MakeCode מופיעים שני לוחות אוטומטית כשמשתמשים ברדיו.
 
-השולח:
+<img src="docs/images/morse-sender.png" alt="morse-sender" width="522">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 israel.setMorseRadioGroup(7)
 input.onButtonPressed(Button.A, function () {
     israel.sendMorse("חג שמח")
 })
 ```
+
+</details>
+
 "שלח מורס ברדיו" שולח את ההודעה אות אחר אות, סימן אחר סימן, בקצב המורס. השולח רק מהבהב.
 
 לבניית טלגרף משלכם יש ארבעה בלוקים, שכל אחד מהם שולח סימן ברדיו ומנגן אותו גם כאן:
@@ -109,6 +159,10 @@ input.onButtonPressed(Button.A, function () {
 * **האות האחרונה שנשלחה במורס** – האות שהוקשה, אם רוצים להציג אותה
 
 מחליטים לבד מה מפעיל כל סימן: כפתורים, לוגו המגע, ניעור, פין, לולאות ועוד. למשל:
+<img src="docs/images/morse-telegraph.png" alt="morse-telegraph" width="709">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 israel.setMorseRadioGroup(7)
 input.onButtonPressed(Button.A, function () {
@@ -126,13 +180,21 @@ input.onGesture(Gesture.Shake, function () {
 })
 ```
 
-**3. קליטה ברדיו** – המקבל מחליט מה לעשות עם כל אות שמגיע:
-* **כשמתקבל אות מורס (אות)** – אירוע עם המשתנה `אות`: `.` נקודה, `-` קו, רווח לסוף אות, `/` לסוף מילה
+</details>
+
+
+#### 3. קליטה ברדיו
+המקבל מחליט מה לעשות עם כל אות שמגיע:
+* **כשמתקבל אות מורס (signal)** – אירוע עם המשתנה `signal`: `.` נקודה, `-` קו, רווח לסוף אות, `/` לסוף מילה
 * **הצג אות מורס בנוריות** – `+` קטן לנקודה, פס לקו. התוכנית ממשיכה לרוץ בזמן ההצגה, כך שאפשר לשים אחריו צליל והם יופיעו יחד
 * **השמע אות מורס** – צפצוף קצר לנקודה, ארוך לקו
 * **מורס [נקודה / קו / סוף אות / סוף מילה]** – להשוואה עם האות שהתקבל
 
 חידה – רק מצפצפים ומהבהבים, והמאזינים מפענחים בעצמם:
+<img src="docs/images/morse-puzzle.png" alt="morse-puzzle" width="551">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 israel.setMorseRadioGroup(7)
 israel.onMorseReceived(function (signal) {
@@ -141,19 +203,76 @@ israel.onMorseReceived(function (signal) {
 })
 ```
 
-**4. בונים מפענח** – אוספים את הנקודות והקווים במשתנה, ובסוף כל אות משווים ל"קוד מורס של" כל אות:
+</details>
+
+
+> האירוע "כשמתקבל אות מורס" משתמש באירוע הרדיו "כשמתקבל ערך", ולכן אין להשתמש באירוע הזה במקום אחר באותה תוכנית.
+
+#### 4. בונים מפענח אוטומטי, צעד אחר צעד
+המקבל יכול לפענח את ההודעה לבד. הרעיון: בכל פעם שמגיעה נקודה או קו מוסיפים אותם לסוף משתנה טקסט, וכשמגיע "סוף אות" בודקים לאיזו אות זה מתאים.
+
+**צעד 1 – אוספים את הסימנים.** יוצרים משתנה `code` (בקטגוריית משתנים) שמתחיל כטקסט ריק. בכל פעם שמגיעה נקודה או קו, מצרפים אותם לסוף המשתנה בעזרת הבלוק **"צרף"** מקטגוריית טקסט. כדי לראות מה נאסף, מציגים את המשתנה:
+<img src="docs/images/decoder-step1.png" alt="decoder-step1" width="760">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 let code = ""
-let letters = ["א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת"]
+israel.setMorseRadioGroup(7)
+israel.onMorseReceived(function (signal) {
+    if (signal == israel.morseSignal(MorseSignal.Dot) || signal == israel.morseSignal(MorseSignal.Dash)) {
+        code = "" + code + signal
+        basic.showString(code)
+    }
+})
+```
+
+</details>
+
+שולחים מהמיקרוביט השני את האות ש, ורואים על המסך `.`, אחר כך `..` ובסוף `...`.
+
+**צעד 2 – מזהים אות אחת.** כשמגיע "סוף אות", משווים את מה שנאסף לבלוק **קוד מורס של "ש"**. אם הם שווים, זו האות ש. אחרי הבדיקה מאפסים את המשתנה, כדי שהאות הבאה תתחיל מהתחלה:
+<img src="docs/images/decoder-step2.png" alt="decoder-step2" width="760">
+
+<details><summary>הצג קוד</summary>
+
+```blocks
+let code = ""
+israel.setMorseRadioGroup(7)
+israel.onMorseReceived(function (signal) {
+    if (signal == israel.morseSignal(MorseSignal.Dot) || signal == israel.morseSignal(MorseSignal.Dash)) {
+        code = "" + code + signal
+    } else if (signal == israel.morseSignal(MorseSignal.LetterEnd)) {
+        if (code == israel.textToMorse("ש")) {
+            israel.showHebrew("ש")
+        }
+        code = ""
+    }
+})
+```
+
+</details>
+
+זה הטריק של המפענח: לא צריך לזכור את טבלת המורס, כי הבלוק "קוד מורס של" יודע אותה.
+
+**צעד 3 – כל האותיות.** במקום לכתוב "אם" לכל אחת מ-22 האותיות, כותבים את כל האותיות במשתנה טקסט אחד, `alphabet`, ועוברים עליו בלולאה **"עבור index מ-0 ל..."** (קטגוריית לולאות), עד **אורך של alphabet פחות 1**.
+בכל סיבוב לוקחים את האות שבמקום `index` בעזרת הבלוק **"תו מ- ... ב- ..."** (קטגוריית טקסט), ובודקים אם קוד המורס שלה שווה למה שנאסף:
+<img src="docs/images/decoder-step3.png" alt="decoder-step3" width="760">
+
+<details><summary>הצג קוד</summary>
+
+```blocks
+let code = ""
+let alphabet = "אבגדהוזחטיכלמנסעפצקרשת"
 israel.setMorseRadioGroup(7)
 israel.onMorseReceived(function (signal) {
     israel.playMorseSignal(signal)
     if (signal == israel.morseSignal(MorseSignal.Dot) || signal == israel.morseSignal(MorseSignal.Dash)) {
         code = "" + code + signal
     } else if (signal == israel.morseSignal(MorseSignal.LetterEnd)) {
-        for (let letter of letters) {
-            if (israel.textToMorse(letter) == code) {
-                israel.showHebrew(letter)
+        for (let index = 0; index <= alphabet.length - 1; index++) {
+            if (code == israel.textToMorse(alphabet.charAt(index))) {
+                israel.showHebrew(alphabet.charAt(index))
             }
         }
         code = ""
@@ -161,18 +280,67 @@ israel.onMorseReceived(function (signal) {
 })
 ```
 
-> האירוע "כשמתקבל אות מורס" משתמש באירוע הרדיו "כשמתקבל ערך", ולכן אין להשתמש באירוע הזה במקום אחר באותה תוכנית.
+</details>
+
+
+**בונוס – מילה שלמה.** מוסיפים משתנה `word`. כל אות שזוהתה מצטרפת לסוף המילה, וכשמגיע "סוף מילה" מציגים את כל המילה ומתחילים מילה חדשה:
+<img src="docs/images/decoder-word.png" alt="decoder-word" width="760">
+
+<details><summary>הצג קוד</summary>
+
+```blocks
+let code = ""
+let word = ""
+let alphabet = "אבגדהוזחטיכלמנסעפצקרשת"
+israel.setMorseRadioGroup(7)
+israel.onMorseReceived(function (signal) {
+    israel.playMorseSignal(signal)
+    if (signal == israel.morseSignal(MorseSignal.Dot) || signal == israel.morseSignal(MorseSignal.Dash)) {
+        code = "" + code + signal
+    } else if (signal == israel.morseSignal(MorseSignal.LetterEnd)) {
+        for (let index = 0; index <= alphabet.length - 1; index++) {
+            if (code == israel.textToMorse(alphabet.charAt(index))) {
+                word = "" + word + alphabet.charAt(index)
+            }
+        }
+        code = ""
+    } else if (signal == israel.morseSignal(MorseSignal.WordEnd)) {
+        israel.showHebrew(word)
+        word = ""
+    }
+})
+```
+
+</details>
+
+"שלח מורס ברדיו" שולח "סוף מילה" בסוף כל מילה, כולל המילה האחרונה בהודעה.
+
+**רעיונות להמשך:**
+* להוסיף ל-`alphabet` גם ספרות (0–9).
+* להציג "?" כשהקוד לא מתאים לאף אות.
+* לספור כמה אותיות פוענחו נכון במשחק בין שתי קבוצות.
 
 ### כיף
+<img src="docs/images/fun.png" alt="fun" width="350">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 basic.showNumber(israel.israelAge(2026))
 ```
+
+</details>
+
 מחזיר את גיל מדינת ישראל בשנה שבוחרים.
 
 ## דוגמה: יום העצמאות
+<img src="docs/images/independence-day.png" alt="independence-day" width="599">
+
+<details><summary>הצג קוד</summary>
+
 ```blocks
 input.onButtonPressed(Button.A, function () {
-    israel.showSymbol(IsraelSymbol.StarOfDavid)
+    israel.scrollPicture(IsraelPicture.Flag)
     israel.playHatikvah()
 })
 input.onButtonPressed(Button.B, function () {
@@ -180,6 +348,9 @@ input.onButtonPressed(Button.B, function () {
     israel.showGreeting(HebrewGreeting.HappyIndependenceDay)
 })
 ```
+
+</details>
+
 
 ## הערה על צבעים
 הבלוקים צבועים בכחול של דגל ישראל. הלדים של המיקרוביט עצמו אדומים.
@@ -189,9 +360,10 @@ input.onButtonPressed(Button.B, function () {
 ## English
 
 MakeCode extension for the BBC micro:bit with Israeli blocks: the Star of David and other symbols,
-a built-in 5×5 Hebrew font for scrolling Hebrew text right-to-left, ready-made Hebrew greetings,
-Hatikvah and Israeli holiday songs, Star of David and fireworks animations, Hanukkah candle lighting,
-and Hebrew Morse code: an encoder, a radio Morse puzzle and building blocks for your own telegraph.
+scrolling wide pictures (a hanukkiah, a menorah, the flag, Jerusalem), a built-in 5×5 Hebrew font for
+scrolling Hebrew text right-to-left, ready-made Hebrew greetings, Hatikvah and Israeli holiday songs,
+animations with an adjustable speed, and Hebrew Morse code: an encoder, radio sending and receiving
+blocks, building blocks for your own telegraph, and a step-by-step guide to building a decoder.
 
 Add it in MakeCode via **Extensions** and the URL `https://github.com/nadaval56/israel-microbit`.
 Block names are translated to Hebrew when the editor language is set to Hebrew.

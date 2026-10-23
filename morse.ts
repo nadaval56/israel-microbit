@@ -77,6 +77,8 @@ namespace israel {
             for (let j = 0; j < m.length; j++) symbols.push(m.charAt(j) == "." ? DOT : DASH);
             if (m.length > 0) symbols.push(LETTER_END);
         }
+        // the message ends with the end of its last word
+        if (symbols.length > 0 && symbols[symbols.length - 1] == LETTER_END) symbols.push(WORD_END);
         return symbols;
     }
 
