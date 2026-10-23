@@ -75,7 +75,7 @@ for (let night = 0; night <= 7; night++) {
 בדוגמה, הלולאה גוללת את כל שמונת לילות החנוכה ברצף (הלולאה סופרת מ-0 עד 7, ולכן הלילה הוא המספר ועוד 1).
 
 ### מוזיקה
-<img src="docs/images/music.png" alt="music" width="923">
+<img src="docs/images/music.png" alt="music" width="853">
 
 <details><summary>הצג קוד</summary>
 
@@ -86,7 +86,7 @@ input.onButtonPressed(Button.A, function () {
 })
 input.onButtonPressed(Button.B, function () {
     israel.showSymbol(IsraelSymbol.Dreidel)
-    israel.playSong(IsraeliSong.MaozTzur, music.PlaybackMode.UntilDone, 150)
+    israel.playSong(IsraeliSong.MaozTzur, SongPlayMode.UntilDone, 150)
 })
 ```
 
@@ -117,13 +117,13 @@ input.onButtonPressed(Button.B, function () {
 * **עד הסוף** – התוכנית מחכה שהשיר ייגמר, ורק אז ממשיכה לבלוק הבא.
 * **ברקע** – השיר מתחיל, והתוכנית ממשיכה מיד. כך אפשר להציג טקסט או אנימציה בזמן שהשיר מתנגן.
 * **ברקע בלולאה** – השיר חוזר שוב ושוב, עד ש"עצור את כל הצלילים" או עד ששיר אחר מתחיל.
-<img src="docs/images/music-background.png" alt="music-background" width="664">
+<img src="docs/images/music-background.png" alt="music-background" width="572">
 
 <details><summary>הצג קוד</summary>
 
 ```blocks
 input.onButtonPressed(Button.A, function () {
-    israel.playSong(IsraeliSong.Sevivon, music.PlaybackMode.InBackground)
+    israel.playSong(IsraeliSong.Sevivon, SongPlayMode.InBackground)
     israel.showHebrew("חנוכה שמח")
     israel.scrollHanukkiah(8)
 })
@@ -413,7 +413,7 @@ basic.showNumber(israel.israelAge(2026))
 מחזיר את גיל מדינת ישראל בשנה שבוחרים.
 
 ## דוגמה: יום העצמאות
-<img src="docs/images/independence-day.png" alt="independence-day" width="651">
+<img src="docs/images/independence-day.png" alt="independence-day" width="616">
 
 <details><summary>הצג קוד</summary>
 

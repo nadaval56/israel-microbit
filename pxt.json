@@ -1,6 +1,6 @@
 {
     "name": "israel",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Israeli blocks for micro:bit: Star of David, Hebrew text, Hatikvah, holiday songs, animations and Hebrew Morse code",
     "license": "MIT",
     "dependencies": {

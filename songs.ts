@@ -28,6 +28,18 @@ enum IsraeliSong {
     ShiratHaasavim
 }
 
+/**
+ * How a song plays: the program waits for it, or goes on while it plays
+ */
+enum SongPlayMode {
+    //% block="until done"
+    UntilDone,
+    //% block="in background"
+    InBackground,
+    //% block="looping in background"
+    LoopingInBackground
+}
+
 namespace israel {
 
     // frequencies of octave 4, from C
@@ -38,7 +50,7 @@ namespace israel {
     // the speed in percent and by the MakeCode tempo block (120 = natural speed), and
     // can be raised by octaves, which the speaker plays louder. Each note is cut a
     // little short so that repeated notes are heard separately.
-    // The song stops between notes when another song starts or on "stop all sounds".
+    // The song stops at once when another song starts or on "stop all sounds".
     function playNotes(notes: string, bpm: number, octaveUp: number, speed: number, run: number): void {
         speed = Math.max(10, Math.min(400, speed));
         const sixteenth = Math.idiv(180000000, bpm * music.tempo() * speed);
@@ -46,14 +58,29 @@ namespace israel {
             const midi = notes.charCodeAt(i);
             const ms = (notes.charCodeAt(i + 1) - 96) * sixteenth;
             if (midi == 33) {
-                music.rest(ms);
+                hold(0, ms, run);
             } else {
                 const octave = Math.idiv(midi, 12) - 1 + octaveUp;
                 const f = octave4[midi % 12];
                 const gap = Math.min(60, Math.idiv(ms, 5));
-                music.playTone(octave >= 4 ? f << (octave - 4) : f >> (4 - octave), ms - gap);
-                music.rest(gap);
+                hold(octave >= 4 ? f << (octave - 4) : f >> (4 - octave), ms - gap, run);
+                hold(0, gap, run);
             }
+        }
+        if (run == songRun) music.ringTone(0);
+    }
+
+    // Sounds a note (0 = silence) for a while. A newer song or "stop all sounds"
+    // ends the wait at once and leaves the speaker alone, so two songs never
+    // play over each other.
+    function hold(frequency: number, ms: number, run: number): void {
+        if (run != songRun) return;
+        music.ringTone(frequency);
+        const end = control.millis() + ms;
+        while (run == songRun) {
+            const left = end - control.millis();
+            if (left <= 0) return;
+            basic.pause(Math.min(20, left));
         }
     }
 
@@ -61,11 +88,11 @@ namespace israel {
     let songRun = 0;
     let stopHooked = false;
 
-    function startSong(notes: string, bpm: number, octaveUp: number, speed: number, mode: music.PlaybackMode): void {
+    function startSong(notes: string, bpm: number, octaveUp: number, speed: number, mode: SongPlayMode): void {
         // programs written before the play mode existed pass the speed in its place
-        if (mode > music.PlaybackMode.LoopingInBackground) {
+        if (mode > SongPlayMode.LoopingInBackground) {
             speed = mode;
-            mode = music.PlaybackMode.UntilDone;
+            mode = SongPlayMode.UntilDone;
         }
         if (!stopHooked) {
             stopHooked = true;
@@ -73,14 +100,14 @@ namespace israel {
         }
         songRun++;
         const run = songRun;
-        if (mode == music.PlaybackMode.UntilDone) {
+        if (mode == SongPlayMode.UntilDone) {
             playNotes(notes, bpm, octaveUp, speed, run);
             return;
         }
         control.inBackground(function () {
             do {
                 playNotes(notes, bpm, octaveUp, speed, run);
-            } while (mode == music.PlaybackMode.LoopingInBackground && run == songRun);
+            } while (mode == SongPlayMode.LoopingInBackground && run == songRun);
         });
     }
 
@@ -90,11 +117,11 @@ namespace israel {
      * @param speed speed in percent, 100 is the natural speed, eg: 100
      */
     //% blockId=israel_hatikvah block="play Hatikvah %mode||at speed %speed percent"
-    //% mode.defl=music.PlaybackMode.UntilDone
+    //% mode.defl=SongPlayMode.UntilDone
     //% speed.defl=100 speed.min=25 speed.max=300
     //% expandableArgumentMode="toggle"
     //% group="Music" weight=100
-    export function playHatikvah(mode: music.PlaybackMode = music.PlaybackMode.UntilDone, speed: number = 100): void {
+    export function playHatikvah(mode: SongPlayMode = SongPlayMode.UntilDone, speed: number = 100): void {
         // Kol od ba-le-vav pe-ni-ma ... e-retz tzi-yon vi-ru-sha-la-yim (FluteTunes score)
         startSong("JbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJfEbJbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJhJdVdVdVdTbVbTbRbQhJdVdVdVdTbVbTbRbQhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJh", 72, 0, speed, mode);
     }
@@ -106,11 +133,11 @@ namespace israel {
      * @param speed speed in percent, 100 is the natural speed, eg: 100
      */
     //% blockId=israel_play_song block="play song %song %mode||at speed %speed percent"
-    //% mode.defl=music.PlaybackMode.UntilDone
+    //% mode.defl=SongPlayMode.UntilDone
     //% speed.defl=100 speed.min=25 speed.max=300
     //% expandableArgumentMode="toggle"
     //% group="Music" weight=90
-    export function playSong(song: IsraeliSong, mode: music.PlaybackMode = music.PlaybackMode.UntilDone, speed: number = 100): void {
+    export function playSong(song: IsraeliSong, mode: SongPlayMode = SongPlayMode.UntilDone, speed: number = 100): void {
         switch (song) {
             case IsraeliSong.AmYisraelChai:
                 // Am Yis-ra-el chai, od a-vi-nu chai (Shlomo Carlebach) (jewisheetmusic.com note-name score)
