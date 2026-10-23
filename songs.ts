@@ -62,6 +62,11 @@ namespace israel {
     let stopHooked = false;
 
     function startSong(notes: string, bpm: number, octaveUp: number, speed: number, mode: music.PlaybackMode): void {
+        // programs written before the play mode existed pass the speed in its place
+        if (mode > music.PlaybackMode.LoopingInBackground) {
+            speed = mode;
+            mode = music.PlaybackMode.UntilDone;
+        }
         if (!stopHooked) {
             stopHooked = true;
             music._onStopSound(function () { songRun++; });
@@ -81,14 +86,15 @@ namespace israel {
 
     /**
      * Play Hatikvah, the national anthem of Israel
-     * @param speed speed in percent, 100 is the natural speed, eg: 100
      * @param mode play until done, in the background or looping in the background
+     * @param speed speed in percent, 100 is the natural speed, eg: 100
      */
     //% blockId=israel_hatikvah block="play Hatikvah %mode||at speed %speed percent"
+    //% mode.defl=music.PlaybackMode.UntilDone
     //% speed.defl=100 speed.min=25 speed.max=300
     //% expandableArgumentMode="toggle"
     //% group="Music" weight=100
-    export function playHatikvah(speed: number = 100, mode: music.PlaybackMode = music.PlaybackMode.UntilDone): void {
+    export function playHatikvah(mode: music.PlaybackMode = music.PlaybackMode.UntilDone, speed: number = 100): void {
         // Kol od ba-le-vav pe-ni-ma ... e-retz tzi-yon vi-ru-sha-la-yim (FluteTunes score)
         startSong("JbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJfEbJbLbMbObQdQdRbQbRbVbQhOdObObMdMdLbJbLbMbJhJdVdVdVdTbVbTbRbQhJdVdVdVdTbVbTbRbQhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJhOdObObMdMdObQbRbTbQdObMbOdOdMdMdLbJbLbMbJh", 72, 0, speed, mode);
     }
@@ -96,14 +102,15 @@ namespace israel {
     /**
      * Play an Israeli song or a holiday song
      * @param song the song to play
-     * @param speed speed in percent, 100 is the natural speed, eg: 100
      * @param mode play until done, in the background or looping in the background
+     * @param speed speed in percent, 100 is the natural speed, eg: 100
      */
     //% blockId=israel_play_song block="play song %song %mode||at speed %speed percent"
+    //% mode.defl=music.PlaybackMode.UntilDone
     //% speed.defl=100 speed.min=25 speed.max=300
     //% expandableArgumentMode="toggle"
     //% group="Music" weight=90
-    export function playSong(song: IsraeliSong, speed: number = 100, mode: music.PlaybackMode = music.PlaybackMode.UntilDone): void {
+    export function playSong(song: IsraeliSong, mode: music.PlaybackMode = music.PlaybackMode.UntilDone, speed: number = 100): void {
         switch (song) {
             case IsraeliSong.AmYisraelChai:
                 // Am Yis-ra-el chai, od a-vi-nu chai (Shlomo Carlebach) (jewisheetmusic.com note-name score)
