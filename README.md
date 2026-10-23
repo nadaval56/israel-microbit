@@ -206,7 +206,7 @@ israel.onMorseReceived(function (signal) {
 </details>
 
 
-> האירוע "כשמתקבל אות מורס" משתמש באירוע הרדיו "כשמתקבל ערך", ולכן אין להשתמש באירוע הזה במקום אחר באותה תוכנית.
+> אפשר לשלב את בלוקי המורס עם בלוקי הרדיו הרגילים של MakeCode באותה תוכנית. ההסבר בפרק "רדיו: טקסט בעברית ואנימציות".
 
 #### 4. בונים מפענח אוטומטי, צעד אחר צעד
 המקבל יכול לפענח את ההודעה לבד. הרעיון: בכל פעם שמגיעה נקודה או קו מוסיפים אותם לסוף משתנה טקסט, וכשמגיע "סוף אות" בודקים לאיזו אות זה מתאים.
@@ -320,6 +320,62 @@ israel.onMorseReceived(function (signal) {
 * להציג "?" כשהקוד לא מתאים לאף אות.
 * לספור כמה אותיות פוענחו נכון במשחק בין שתי קבוצות.
 
+### רדיו: טקסט בעברית ואנימציות
+מיקרוביט אחד שולח, וכל המיקרוביטים באותה קבוצת רדיו מקבלים. בשני הלוחות צריך את ההרחבה.
+
+**טקסט בעברית.** "רדיו שלח טקסט בעברית" שולח מחרוזת שלמה, גם ארוכה. המקבל מציג אותה עם "הצג טקסט בעברית":
+<img src="docs/images/radio-text.png" alt="radio-text" width="632">
+
+<details><summary>הצג קוד</summary>
+
+```blocks
+radio.setGroup(1)
+input.onButtonPressed(Button.A, function () {
+    israel.sendHebrewText("שלום מכיתה ה'")
+})
+israel.onHebrewTextReceived(function (text) {
+    israel.showHebrew(text)
+})
+```
+
+</details>
+
+הבלוק "הצג מחרוזת" הרגיל לא יודע להציג עברית, ולכן משתמשים ב"הצג טקסט בעברית".
+
+**אנימציות, סמלים ותמונות.** השולח בוחר מה להפעיל, והמקבל מפעיל את מה שהגיע:
+<img src="docs/images/radio-animation.png" alt="radio-animation" width="910">
+
+<details><summary>הצג קוד</summary>
+
+```blocks
+radio.setGroup(1)
+input.onButtonPressed(Button.A, function () {
+    israel.sendAnimation(IsraelAnimation.Fireworks)
+})
+input.onButtonPressed(Button.B, function () {
+    israel.sendPicture(IsraelPicture.Flag)
+})
+input.onButtonPressed(Button.AB, function () {
+    israel.sendSymbol(IsraelSymbol.Dreidel)
+})
+israel.onAnimationReceived(function () {
+    israel.playReceived()
+})
+```
+
+</details>
+
+אפשר להוסיף בתוך האירוע עוד בלוקים, למשל צליל קצר לפני האנימציה או ברכה אחריה.
+
+**למה לא "רדיו שלח מחרוזת" הרגיל?** חבילת רדיו יכולה לשאת עד 19 תווים, ו"הצג מחרוזת" לא מכיר את הגופן העברי.
+"רדיו שלח טקסט בעברית" מחלק טקסט ארוך לכמה חבילות, והמקבל מחבר אותן חזרה לפני שהאירוע רץ.
+אם חבילה אחת הלכה לאיבוד בדרך, ההודעה כולה לא מוצגת.
+
+> **שילוב עם בלוקי הרדיו הרגילים:** בקטגוריית רדיו של MakeCode יש לכל סוג הודעה (מספר, שם וערך, מחרוזת) אירוע קבלה אחד בלבד,
+> ואם משתמשים באותו אירוע פעמיים רק האחרון עובד. בלוקי הרדיו של ההרחבה (וגם בלוקי המורס) שולחים הודעות מסוג buffer,
+> ולכן אפשר לשלב אותם באותה תוכנית עם האירועים הרגילים של קבלת מספר, שם וערך או מחרוזת.
+> רק את אירוע הקבלה של buffer (בתפריט "עוד" של קטגוריית רדיו) לא כדאי להוסיף לתוכנית כזו.
+
 ### כיף
 <img src="docs/images/fun.png" alt="fun" width="350">
 
@@ -364,6 +420,8 @@ scrolling wide pictures (a hanukkiah, a menorah, the flag, Jerusalem), a built-i
 scrolling Hebrew text right-to-left, ready-made Hebrew greetings, Hatikvah and Israeli holiday songs,
 animations with an adjustable speed, and Hebrew Morse code: an encoder, radio sending and receiving
 blocks, building blocks for your own telegraph, and a step-by-step guide to building a decoder.
+Radio blocks send whole Hebrew strings (split into parts when long), animations, symbols and pictures
+to other micro:bits. They travel as buffer packets, so the regular radio blocks keep working in the same program.
 
 Add it in MakeCode via **Extensions** and the URL `https://github.com/nadaval56/israel-microbit`.
 Block names are translated to Hebrew when the editor language is set to Hebrew.
