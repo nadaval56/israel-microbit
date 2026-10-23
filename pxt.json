@@ -11,6 +11,7 @@
         "README.md",
         "israel.ts",
         "morse.ts",
+        "hebrew-radio.ts",
         "songs.ts",
         "_locales/he/israel-strings.json",
         "_locales/he/israel-jsdoc-strings.json"

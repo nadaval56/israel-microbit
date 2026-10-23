@@ -48,7 +48,6 @@ namespace israel {
     const DASH = 2;
     const LETTER_END = 3;
     const WORD_END = 4;
-    const RADIO_KEY = "morse";
     const TONE = 700;
 
     let unit = 120;
@@ -204,8 +203,8 @@ namespace israel {
     //% draggableParameters="reporter"
     //% group="Morse" weight=68
     export function onMorseReceived(handler: (signal: string) => void): void {
-        radio.onReceivedValue(function (name: string, value: number) {
-            if (name == RADIO_KEY && value >= DOT && value <= WORD_END) handler(signalText[value - 1]);
+        _onMorseRadio(function (symbol: number) {
+            if (symbol >= DOT && symbol <= WORD_END) handler(signalText[symbol - 1]);
         });
     }
 
@@ -267,7 +266,7 @@ namespace israel {
         const saved = output;
         output = MorseOutput.Light;
         for (let i = 0; i < symbols.length; i++) {
-            radio.sendValue(RADIO_KEY, symbols[i]);
+            _sendMorseRadio(symbols[i]);
             playSymbol(symbols[i]);
         }
         output = saved;
@@ -281,7 +280,7 @@ namespace israel {
     let lastLetter = "";
 
     function sendSign(symbol: number): void {
-        radio.sendValue(RADIO_KEY, symbol);
+        _sendMorseRadio(symbol);
         playSymbol(symbol);
     }
 

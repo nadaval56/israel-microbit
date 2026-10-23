@@ -35,3 +35,15 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
     israel.endWord()
 })
 israel.setAnimationSpeed(50)
+
+// radio: Hebrew text and animations
+israel.onHebrewTextReceived(function (text) {
+    israel.showHebrew(text)
+})
+israel.onAnimationReceived(function () {
+    israel.showSymbol(IsraelSymbol.StarOfDavid)
+})
+input.onButtonPressed(Button.AB, function () {
+    israel.sendHebrewText("שלום לכולם")
+    israel.sendAnimation(IsraelAnimation.Fireworks)
+})
