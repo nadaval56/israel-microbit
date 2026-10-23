@@ -54,6 +54,7 @@
   "israel.sendDash|block": "מורס: שלח קו",
   "israel.sendDot|block": "מורס: שלח נקודה",
   "israel.sendMorse|block": "שלח מורס ברדיו %text",
+  "israel.setAnimationSpeed|block": "קבע קצב אנימציה ל- %speed אחוז",
   "israel.setMorseOutput|block": "נגן מורס עם %mode",
   "israel.setMorseRadioGroup|block": "קבע קבוצת רדיו למורס %id",
   "israel.setMorseSpeed|block": "קבע אורך נקודה במורס ל- %ms מילישניות",

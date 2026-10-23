@@ -135,6 +135,25 @@ namespace israel {
     // Animations
     // ---------------------------------------------------------------------
 
+    let animationSpeed = 100;
+
+    // waits for the given time, scaled by the animation speed
+    function animationPause(ms: number): void {
+        basic.pause(Math.idiv(ms * 100, animationSpeed));
+    }
+
+    /**
+     * Set the speed of the animations that come after this block.
+     * 100 is the normal speed, 50 is half as fast, 200 twice as fast.
+     * @param speed speed in percent, eg: 100
+     */
+    //% blockId=israel_animation_speed block="set animation speed to %speed percent"
+    //% speed.defl=100 speed.min=10 speed.max=500
+    //% group="Animations" weight=110
+    export function setAnimationSpeed(speed: number): void {
+        animationSpeed = Math.max(10, Math.min(500, speed));
+    }
+
     function starOfDavid(): void {
         // the outline of the star, clockwise from the top point
         const ringX = [2, 3, 4, 3, 4, 3, 2, 1, 0, 1, 0, 1];
@@ -144,18 +163,18 @@ namespace israel {
         basic.clearScreen();
         for (let i = 0; i < 12; i++) {
             led.plotBrightness(ringX[i], ringY[i], 255);
-            basic.pause(70);
+            animationPause(70);
         }
         led.plotBrightness(2, 1, 255);
         led.plotBrightness(2, 3, 255);
-        basic.pause(200);
+        animationPause(200);
         // a bright light with a tail runs around the dim star
         for (let t = 0; t < 24; t++) {
             drawPattern(star, 0, 40);
             led.plotBrightness(ringX[(t + 10) % 12], ringY[(t + 10) % 12], 90);
             led.plotBrightness(ringX[(t + 11) % 12], ringY[(t + 11) % 12], 160);
             led.plotBrightness(ringX[t % 12], ringY[t % 12], 255);
-            basic.pause(70);
+            animationPause(70);
         }
         // twinkle
         for (let t = 0; t < 16; t++) {
@@ -164,20 +183,20 @@ namespace israel {
                 const i = randint(0, 11);
                 led.plotBrightness(ringX[i], ringY[i], 255);
             }
-            basic.pause(90);
+            animationPause(90);
         }
         // pulse and stay lit
         for (let b = 40; b <= 255; b += 25) {
             drawPattern(star, 0, b);
-            basic.pause(30);
+            animationPause(30);
         }
         for (let b = 255; b >= 40; b -= 25) {
             drawPattern(star, 0, b);
-            basic.pause(30);
+            animationPause(30);
         }
         for (let b = 40; b <= 255; b += 25) {
             drawPattern(star, 0, b);
-            basic.pause(30);
+            animationPause(30);
         }
         drawPattern(star, 0, 255);
     }
@@ -190,7 +209,7 @@ namespace israel {
             for (let y = 4; y >= cy; y--) {
                 basic.clearScreen();
                 led.plot(cx, y);
-                basic.pause(70);
+                animationPause(70);
             }
             // and bursts into rings
             for (let r = 1; r <= 3; r++) {
@@ -202,10 +221,10 @@ namespace israel {
                         }
                     }
                 }
-                basic.pause(110);
+                animationPause(110);
             }
             basic.clearScreen();
-            basic.pause(150);
+            animationPause(150);
         }
         showSymbol(IsraelSymbol.StarOfDavid);
     }
@@ -264,7 +283,7 @@ namespace israel {
                     led.plotBrightness(x, y, Math.idiv(d * 255, 9));
                 }
             }
-            basic.pause(interval);
+            animationPause(interval);
         }
     }
 
@@ -316,17 +335,17 @@ namespace israel {
             `, 0);
         // the shamash first, then each candle in turn
         led.plot(2, 0);
-        basic.pause(400);
+        animationPause(400);
         for (let i = 0; i < night; i++) {
             led.plot(xs[i], ys[i]);
-            basic.pause(400);
+            animationPause(400);
         }
         for (let t = 0; t < 30; t++) {
             led.plotBrightness(2, 0, randint(150, 255));
             for (let i = 0; i < night; i++) {
                 led.plotBrightness(xs[i], ys[i], randint(90, 255));
             }
-            basic.pause(100);
+            animationPause(100);
         }
         led.plotBrightness(2, 0, 255);
         for (let i = 0; i < night; i++) {

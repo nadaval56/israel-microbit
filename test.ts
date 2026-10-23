@@ -34,3 +34,4 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
     israel.showHebrew(israel.lastLetterSent())
     israel.endWord()
 })
+israel.setAnimationSpeed(50)

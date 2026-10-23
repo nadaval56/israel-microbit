@@ -40,6 +40,8 @@
   "israel.sendDot": "שליחת נקודה ברדיו ונגינתה כאן",
   "israel.sendMorse": "שליחת טקסט בקוד מורס ברדיו, אות אחר אות. השולח רק מהבהב, והמקבלים מחליטים מה לעשות עם כל אות",
   "israel.sendMorse|param|text": "הטקסט לשליחה",
+  "israel.setAnimationSpeed": "קביעת הקצב של האנימציות שמגיעות אחרי הבלוק. 100 רגיל, 50 חצי מהירות, 200 כפול",
+  "israel.setAnimationSpeed|param|speed": "מהירות באחוזים",
   "israel.setMorseOutput": "בחירה אם לנגן מורס בצליל, באור או בשניהם",
   "israel.setMorseOutput|param|mode": "צליל, אור או שניהם",
   "israel.setMorseRadioGroup": "קביעת קבוצת הרדיו למורס. מיקרוביטים מדברים רק באותה קבוצה",
